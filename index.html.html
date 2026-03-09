@@ -1,0 +1,3160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>حجي حسن - قطع غيار انفنتي</title>
+
+<!-- PWA Meta Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1520">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="حجي حسن">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="حجي حسن">
+<meta name="description" content="برنامج قطع غيار وصيانة سيارات انفنتي ونيسان Z">
+
+<!-- Apple Touch Icons -->
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
+<!-- iOS Splash Screens -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8a6e2e;
+    --black: #050a0e;
+    --dark: #0a1520;
+    --dark2: #0f1e2e;
+    --dark3: #162840;
+    --blue-deep: #0d2137;
+    --blue-accent: #1a4a7a;
+    --cyan: #00d4ff;
+    --cyan-dim: #0099bb;
+    --white: #e8f0f8;
+    --text-dim: #7a9ab5;
+    --red: #ff3344;
+    --green: #00e676;
+    --orange: #ff9500;
+    --purple: #9c27b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== ANIMATED BG ===== */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 20% 50%, #0d2137 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, #1a0a00 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, #001a2a 0%, transparent 50%),
+                #050a0e;
+  }
+
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(5deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(5deg) translateY(50px); }
+  }
+
+  .bg-orbs {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  }
+
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  .orb1 { width: 400px; height: 400px; background: rgba(201,168,76,0.08); top: -100px; left: -100px; animation-delay: 0s; }
+  .orb2 { width: 300px; height: 300px; background: rgba(0,212,255,0.06); top: 50%; right: -50px; animation-delay: 3s; }
+  .orb3 { width: 250px; height: 250px; background: rgba(201,168,76,0.05); bottom: -50px; left: 40%; animation-delay: 6s; }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.1); }
+  }
+
+  /* ===== LAYOUT ===== */
+  .app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: 280px; min-height: 100vh;
+    background: linear-gradient(180deg, rgba(15,30,46,0.98) 0%, rgba(5,10,14,0.98) 100%);
+    border-left: 1px solid rgba(201,168,76,0.2);
+    display: flex; flex-direction: column;
+    position: fixed; right: 0; top: 0; bottom: 0;
+    box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  .logo-area {
+    padding: 30px 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .logo-area::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(201,168,76,0.12) 0%, transparent 70%);
+  }
+
+  .logo-infiniti {
+    font-size: 11px; letter-spacing: 4px; color: var(--text-dim);
+    text-transform: uppercase; margin-bottom: 8px;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .logo-main {
+    font-size: 42px; font-weight: 900;
+    font-family: 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    line-height: 1;
+    letter-spacing: -1px;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
+  }
+
+  .logo-sub {
+    font-size: 13px; color: var(--text-dim);
+    margin-top: 6px; letter-spacing: 1px;
+    font-weight: 400;
+  }
+
+  .logo-divider {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 10px auto;
+  }
+
+  .infiniti-symbol {
+    font-size: 28px; color: var(--gold);
+    opacity: 0.6; letter-spacing: 2px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+  /* NAV */
+  .nav { flex: 1; padding: 20px 0; overflow-y: auto; }
+
+  .nav-section { margin-bottom: 8px; }
+
+  .nav-section-title {
+    font-size: 10px; letter-spacing: 2px; color: var(--text-dim);
+    padding: 10px 20px 6px; text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px; cursor: pointer;
+    transition: all 0.3s; position: relative;
+    color: var(--text-dim); font-size: 14px;
+    border-right: 3px solid transparent;
+  }
+
+  .nav-item:hover, .nav-item.active {
+    color: var(--white);
+    background: linear-gradient(90deg, rgba(201,168,76,0.1) 0%, transparent 100%);
+    border-right-color: var(--gold);
+  }
+
+  .nav-item.active { color: var(--gold); }
+
+  .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+
+  .nav-badge {
+    margin-right: auto; background: var(--red);
+    color: white; font-size: 10px; padding: 2px 6px;
+    border-radius: 10px; font-weight: 700;
+  }
+
+  .nav-badge.green { background: var(--green); color: var(--black); }
+
+  /* USER */
+  .sidebar-user {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .user-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: var(--black);
+    border: 2px solid rgba(201,168,76,0.4);
+  }
+
+  .user-info { flex: 1; }
+  .user-name { font-size: 13px; font-weight: 700; color: var(--white); }
+  .user-role { font-size: 11px; color: var(--gold); }
+
+  /* ===== MAIN ===== */
+  .main {
+    flex: 1;
+    margin-right: 280px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    height: 70px; padding: 0 30px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,21,32,0.9);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    backdrop-filter: blur(20px);
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-title { font-size: 20px; font-weight: 700; color: var(--white); }
+  .topbar-title span { color: var(--gold); }
+
+  .topbar-actions { display: flex; align-items: center; gap: 16px; }
+
+  .top-stat {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px; font-size: 13px;
+  }
+
+  .top-stat-val { font-weight: 700; color: var(--gold); }
+  .top-stat-label { color: var(--text-dim); font-size: 11px; }
+
+  .btn {
+    padding: 9px 20px; border: none; border-radius: 8px;
+    cursor: pointer; font-family: 'Cairo', sans-serif;
+    font-size: 13px; font-weight: 600; transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+    box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.5); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+  }
+  .btn-outline:hover { background: rgba(201,168,76,0.1); }
+
+  .btn-cyan {
+    background: linear-gradient(135deg, var(--cyan-dim), #006688);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,212,255,0.2);
+  }
+
+  .btn-red { background: rgba(255,51,68,0.2); border: 1px solid rgba(255,51,68,0.4); color: var(--red); }
+  .btn-green { background: rgba(0,230,118,0.2); border: 1px solid rgba(0,230,118,0.4); color: var(--green); }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 30px; flex: 1; }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== CARDS ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+
+  .stat-card {
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(15,30,46,0.9) 0%, rgba(22,40,64,0.9) 100%);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 16px;
+    position: relative; overflow: hidden;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.4); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 100%; height: 3px;
+    background: var(--gradient);
+  }
+
+  .stat-card.gold { --gradient: linear-gradient(90deg, var(--gold-dark), var(--gold)); }
+  .stat-card.cyan { --gradient: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); }
+  .stat-card.green { --gradient: linear-gradient(90deg, #00a050, var(--green)); }
+  .stat-card.red { --gradient: linear-gradient(90deg, #cc0022, var(--red)); }
+  .stat-card.orange { --gradient: linear-gradient(90deg, #cc6600, var(--orange)); }
+  .stat-card.purple { --gradient: linear-gradient(90deg, #660099, var(--purple)); }
+
+  .stat-card .bg-icon {
+    position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 60px; opacity: 0.06;
+  }
+
+  .stat-label { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; letter-spacing: 1px; }
+  .stat-value { font-size: 32px; font-weight: 900; line-height: 1; }
+  .stat-card.gold .stat-value { color: var(--gold); }
+  .stat-card.cyan .stat-value { color: var(--cyan); }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.red .stat-value { color: var(--red); }
+  .stat-card.orange .stat-value { color: var(--orange); }
+  .stat-card.purple .stat-value { color: var(--purple); }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+  .stat-change { font-size: 12px; margin-top: 4px; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* GRID 2 COL */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+  /* PANELS */
+  .panel {
+    background: linear-gradient(135deg, rgba(15,30,46,0.95) 0%, rgba(10,21,32,0.95) 100%);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+
+  .panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(201,168,76,0.04);
+  }
+
+  .panel-title { font-size: 15px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 10px; }
+  .panel-title-icon { color: var(--gold); font-size: 18px; }
+  .panel-body { padding: 20px 24px; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    padding: 12px 16px; text-align: right;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-dim); border-bottom: 1px solid rgba(201,168,76,0.1);
+    background: rgba(201,168,76,0.04);
+  }
+  .data-table td {
+    padding: 13px 16px; font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+  .data-table tr:hover td { background: rgba(201,168,76,0.04); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  /* BADGES */
+  .badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: rgba(0,230,118,0.15); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
+  .badge-red { background: rgba(255,51,68,0.15); color: var(--red); border: 1px solid rgba(255,51,68,0.3); }
+  .badge-orange { background: rgba(255,149,0,0.15); color: var(--orange); border: 1px solid rgba(255,149,0,0.3); }
+  .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-cyan { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
+  .badge-purple { background: rgba(156,39,176,0.15); color: var(--purple); border: 1px solid rgba(156,39,176,0.3); }
+
+  /* PROGRESS BARS */
+  .progress-bar {
+    height: 6px; background: rgba(255,255,255,0.08);
+    border-radius: 3px; overflow: hidden; margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    transition: width 1s ease;
+  }
+  .progress-fill.cyan { background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); }
+  .progress-fill.green { background: linear-gradient(90deg, #00a050, var(--green)); }
+  .progress-fill.red { background: linear-gradient(90deg, #cc0022, var(--red)); }
+
+  /* FORMS */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .form-label { font-size: 12px; color: var(--text-dim); letter-spacing: 1px; font-weight: 600; }
+
+  .form-input {
+    padding: 11px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s;
+    text-align: right;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  select.form-input option { background: var(--dark2); color: var(--white); }
+
+  /* SEARCH BAR */
+  .search-bar {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+  }
+
+  .search-input-wrap {
+    flex: 1; position: relative;
+  }
+
+  .search-icon {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%); color: var(--text-dim); font-size: 16px;
+  }
+
+  .search-input-wrap .form-input { width: 100%; padding-right: 44px; }
+
+  /* INVOICE / 3D EFFECT */
+  .invoice-wrapper {
+    perspective: 1000px;
+    display: flex; justify-content: center;
+  }
+
+  .invoice-3d {
+    background: #fff; color: #111;
+    width: 100%; max-width: 700px;
+    border-radius: 8px;
+    transform: rotateX(2deg) rotateY(-1deg);
+    box-shadow:
+      0 50px 100px rgba(0,0,0,0.8),
+      0 20px 40px rgba(201,168,76,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.8),
+      5px 5px 0 rgba(201,168,76,0.2),
+      10px 10px 0 rgba(201,168,76,0.1),
+      15px 15px 0 rgba(201,168,76,0.05);
+    transition: transform 0.4s ease;
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .invoice-3d:hover {
+    transform: rotateX(0deg) rotateY(0deg) scale(1.01);
+  }
+
+  .invoice-header {
+    background: linear-gradient(135deg, #0d2137 0%, #162840 100%);
+    color: white; padding: 30px;
+    position: relative; overflow: hidden;
+  }
+
+  .invoice-header::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 200px; height: 200px;
+    background: rgba(201,168,76,0.1);
+    border-radius: 50%;
+  }
+
+  .invoice-logo-name {
+    font-size: 38px; font-weight: 900;
+    background: linear-gradient(135deg, #f0d080, #c9a84c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .invoice-logo-sub { font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 2px; }
+  .invoice-number { font-size: 20px; font-weight: 700; color: #c9a84c; }
+  .invoice-date { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+  .invoice-body { padding: 30px; }
+
+  .invoice-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+  .invoice-party-title { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .invoice-party-name { font-size: 16px; font-weight: 700; color: #111; }
+  .invoice-party-detail { font-size: 13px; color: #666; margin-top: 4px; }
+
+  .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .invoice-table th {
+    padding: 12px 16px; text-align: right;
+    background: #0d2137; color: #c9a84c;
+    font-size: 12px; letter-spacing: 1px;
+  }
+  .invoice-table td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+  .invoice-table tr:last-child td { border-bottom: none; }
+  .invoice-table tr:nth-child(even) td { background: #fafafa; }
+
+  .invoice-totals { border-top: 2px solid #c9a84c; padding-top: 16px; }
+  .invoice-total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+  .invoice-grand { font-size: 20px; font-weight: 900; color: #0d2137; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 6px; }
+
+  .invoice-footer {
+    background: #f8f8f8; padding: 20px 30px;
+    border-top: 3px solid #c9a84c;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .invoice-stamp {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 3px solid var(--gold-dark);
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(-15deg);
+    color: var(--gold-dark); font-size: 10px; font-weight: 700;
+    text-align: center; line-height: 1.3;
+    background: rgba(201,168,76,0.05);
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.3) inset;
+  }
+
+  /* CHARTS */
+  .chart-area {
+    height: 180px; position: relative;
+    display: flex; align-items: flex-end; gap: 8px;
+    padding: 0 4px;
+  }
+
+  .chart-bar-group { flex: 1; display: flex; align-items: flex-end; gap: 2px; }
+
+  .chart-bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    transition: height 1s ease, opacity 0.3s;
+    cursor: pointer; min-height: 4px;
+  }
+  .chart-bar:hover { opacity: 0.8; }
+  .chart-bar.gold { background: linear-gradient(180deg, var(--gold), var(--gold-dark)); }
+  .chart-bar.cyan { background: linear-gradient(180deg, var(--cyan), var(--cyan-dim)); }
+
+  .chart-labels { display: flex; justify-content: space-around; padding: 8px 4px 0; }
+  .chart-label { font-size: 10px; color: var(--text-dim); text-align: center; flex: 1; }
+
+  /* TOP PARTS LIST */
+  .top-part-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .top-part-item:last-child { border-bottom: none; }
+  .top-part-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .rank-1 { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; }
+  .rank-2 { background: linear-gradient(135deg, #c0c0c0, #888); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #cd7f32, #8b4513); color: #fff; }
+  .rank-other { background: rgba(255,255,255,0.1); color: var(--text-dim); }
+  .top-part-name { flex: 1; font-size: 13px; }
+  .top-part-count { font-size: 12px; color: var(--text-dim); }
+  .top-part-sales { font-size: 13px; font-weight: 700; color: var(--gold); }
+
+  /* ALERT CARDS */
+  .alert-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px;
+    border-radius: 10px; margin-bottom: 10px;
+    border: 1px solid;
+  }
+  .alert-item.danger { background: rgba(255,51,68,0.08); border-color: rgba(255,51,68,0.25); }
+  .alert-item.warning { background: rgba(255,149,0,0.08); border-color: rgba(255,149,0,0.25); }
+  .alert-dot { width: 10px; height: 10px; border-radius: 50%; animation: blink 1.5s ease-in-out infinite; }
+  .danger .alert-dot { background: var(--red); }
+  .warning .alert-dot { background: var(--orange); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .alert-text { flex: 1; font-size: 13px; }
+  .alert-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+  .alert-qty { font-size: 18px; font-weight: 900; }
+  .danger .alert-qty { color: var(--red); }
+  .warning .alert-qty { color: var(--orange); }
+
+  /* CART */
+  .cart-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-img { width: 44px; height: 44px; border-radius: 8px; background: rgba(201,168,76,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid rgba(201,168,76,0.2); }
+  .cart-name { flex: 1; font-size: 13px; }
+  .cart-name-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .cart-qty { display: flex; align-items: center; gap: 8px; }
+  .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.3); background: transparent; color: var(--gold); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .qty-btn:hover { background: rgba(201,168,76,0.2); }
+  .qty-num { width: 30px; text-align: center; font-weight: 700; }
+  .cart-price { font-weight: 700; color: var(--gold); font-size: 14px; }
+  .cart-remove { color: var(--red); cursor: pointer; font-size: 16px; opacity: 0.6; }
+  .cart-remove:hover { opacity: 1; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: linear-gradient(135deg, var(--dark2), var(--dark3));
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px; padding: 32px;
+    width: 90%; max-width: 650px;
+    max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(201,168,76,0.1);
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn { from{opacity:0;transform:scale(0.9) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+  .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--gold); display: flex; align-items: center; gap: 10px; }
+
+  /* CUSTOMER LIST */
+  .customer-card {
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 12px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 16px;
+    transition: all 0.3s;
+  }
+  .customer-card:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.05); }
+  .customer-avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-accent), var(--blue-deep)); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--cyan); }
+  .customer-name { font-size: 15px; font-weight: 700; }
+  .customer-phone { font-size: 12px; color: var(--text-dim); margin-top: 3px; direction: ltr; text-align: right; }
+  .customer-debt { margin-right: auto; }
+  .customer-meta { display: flex; gap: 20px; font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+  /* SUPPLIER */
+  .supplier-card {
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 12px; margin-bottom: 12px;
+    transition: all 0.3s;
+  }
+  .supplier-card:hover { border-color: rgba(0,212,255,0.3); }
+  .supplier-header { display: flex; align-items: center; gap: 16px; }
+  .supplier-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .supplier-name { font-size: 15px; font-weight: 700; flex: 1; }
+  .supplier-balance { text-align: left; }
+  .supplier-balance-label { font-size: 11px; color: var(--text-dim); }
+  .supplier-balance-val { font-size: 18px; font-weight: 900; }
+  .balance-owed { color: var(--red); }
+  .balance-ok { color: var(--green); }
+  .supplier-details { display: flex; gap: 20px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: var(--text-dim); }
+
+  /* REPORTS */
+  .report-card {
+    padding: 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 14px;
+    transition: all 0.3s;
+    cursor: pointer;
+    text-align: center;
+  }
+  .report-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+  .report-icon { font-size: 36px; margin-bottom: 12px; }
+  .report-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .report-desc { font-size: 12px; color: var(--text-dim); }
+
+  /* SETTINGS */
+  .settings-section { margin-bottom: 30px; }
+  .settings-section-title { font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .settings-row { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .settings-info { flex: 1; }
+  .settings-label { font-size: 14px; font-weight: 600; }
+  .settings-desc { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+
+  .toggle { width: 44px; height: 24px; border-radius: 12px; background: rgba(255,255,255,0.1); border: none; cursor: pointer; position: relative; transition: all 0.3s; }
+  .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; right: 3px; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .toggle.on { background: var(--gold); }
+  .toggle.on::after { right: 23px; }
+
+  /* PART CARD */
+  .part-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 14px; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .part-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .part-img { height: 140px; background: linear-gradient(135deg, #0d2137 0%, #162840 100%); display: flex; align-items: center; justify-content: center; font-size: 50px; border-bottom: 1px solid rgba(201,168,76,0.1); position: relative; }
+  .part-stock-badge { position: absolute; top: 10px; left: 10px; }
+  .part-body { padding: 14px; }
+  .part-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .part-number { font-size: 11px; color: var(--text-dim); margin-bottom: 10px; direction: ltr; }
+  .part-prices { display: flex; justify-content: space-between; align-items: center; }
+  .part-sell-price { font-size: 18px; font-weight: 900; color: var(--gold); }
+  .part-buy-price { font-size: 11px; color: var(--text-dim); }
+  .part-footer { padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; gap: 8px; }
+  .part-footer .btn { flex: 1; justify-content: center; font-size: 12px; padding: 7px; }
+
+  /* PARTS GRID */
+  .parts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
+  /* MINI STAT */
+  .mini-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+  .mini-stat { flex: 1; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+  .mini-stat-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+  .mini-stat-val { font-size: 20px; font-weight: 900; }
+
+  /* USER MGMT */
+  .user-card { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .user-card:last-child { border-bottom: none; }
+  .user-card-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+  .role-admin { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); }
+  .role-sales { background: linear-gradient(135deg, var(--cyan-dim), var(--cyan)); color: var(--black); }
+  .role-warehouse { background: linear-gradient(135deg, #00a050, var(--green)); color: var(--black); }
+  .user-card-name { flex: 1; }
+  .user-card-username { font-size: 14px; font-weight: 700; }
+  .user-card-role { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .user-card-actions { display: flex; gap: 8px; }
+  .icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 14px; }
+  .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* BARCODE */
+  .barcode-display {
+    background: white; padding: 20px; border-radius: 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    width: fit-content; margin: 0 auto;
+  }
+  .barcode-lines { display: flex; gap: 2px; height: 60px; }
+  .barcode-line { background: #000; }
+  .barcode-num { font-size: 11px; color: #000; letter-spacing: 3px; font-family: monospace; }
+
+  /* NOTIFICATION DOT */
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); display: inline-block; margin-right: 4px; animation: blink 2s infinite; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.5); }
+
+  /* LOADING */
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.05) 75%); background-size: 200% 100%; animation: shimmer 2s infinite; border-radius: 6px; }
+
+  /* NOTIFICATION */
+  .notif-popup {
+    position: fixed; top: 80px; left: 30px; z-index: 300;
+    background: linear-gradient(135deg, var(--dark2), var(--dark3));
+    border: 1px solid var(--gold);
+    border-radius: 12px; padding: 16px 20px;
+    min-width: 280px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateX(-110%);
+    transition: transform 0.4s ease;
+  }
+  .notif-popup.show { transform: translateX(0); }
+  .notif-popup-title { font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+  .notif-popup-msg { font-size: 12px; color: var(--text-dim); }
+
+  /* DATE TIME */
+  #datetime { font-size: 13px; color: var(--text-dim); }
+
+  /* RESPONSIVE TABLET */
+  @media (max-width: 1200px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* RESPONSIVE MOBILE */
+  @media (max-width: 768px) {
+    .sidebar { width: 280px; transform: translateX(100%); transition: transform 0.3s ease; z-index: 200; }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .main { margin-right: 0 !important; }
+    .topbar { padding: 0 12px; height: 58px; }
+    .topbar-title { font-size: 15px; }
+    .top-stat { display: none; }
+    .topbar-actions .btn-gold { padding: 7px 10px; font-size: 12px; }
+    .content { padding: 12px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-card { padding: 14px 12px; }
+    .stat-value { font-size: 22px; }
+    .grid-2 { grid-template-columns: 1fr; gap: 14px; }
+    .grid-3 { grid-template-columns: 1fr; gap: 14px; }
+    .panel-header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+    .panel-body { padding: 12px 14px; }
+    .parts-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-row, .form-row-3 { grid-template-columns: 1fr; gap: 0; }
+    .data-table { font-size: 12px; }
+    .data-table th, .data-table td { padding: 8px; }
+    .invoice-3d { transform: none !important; }
+    .invoice-parties { grid-template-columns: 1fr; }
+    .modal { padding: 18px; margin: 10px; width: calc(100% - 20px); max-height: 90vh; }
+    .mini-stats { flex-wrap: wrap; gap: 8px; }
+    .mini-stat { min-width: calc(50% - 4px); flex: none; }
+    .search-bar { flex-wrap: wrap; gap: 8px; }
+    .search-bar select.form-input { width: calc(50% - 4px) !important; }
+    .main { padding-bottom: 70px; }
+    .mobile-nav { display: flex !important; }
+    .mobile-menu-btn { display: flex !important; }
+    .logo-area { padding: 20px 16px; }
+    .grid-2[style*="1.4fr"] { grid-template-columns: 1fr !important; }
+  }
+
+  /* PWA INSTALL BANNER */
+  .pwa-banner {
+    display: none; position: fixed;
+    bottom: 76px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, #0f1e2e, #162840);
+    border: 1px solid var(--gold); border-radius: 16px;
+    padding: 14px 18px; min-width: 290px; max-width: 92vw;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    z-index: 500; align-items: center; gap: 14px;
+    animation: slideUp 0.4s ease;
+  }
+  .pwa-banner.show { display: flex; }
+  @keyframes slideUp { from{opacity:0;transform:translateX(-50%) translateY(20px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+  .pwa-banner-icon { font-size: 30px; }
+  .pwa-banner-text { flex: 1; }
+  .pwa-banner-title { font-size: 13px; font-weight: 700; color: var(--gold); }
+  .pwa-banner-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
+
+  /* MOBILE BOTTOM NAV */
+  .mobile-nav {
+    display: none; position: fixed;
+    bottom: 0; left: 0; right: 0; height: 62px;
+    background: rgba(8,17,28,0.98);
+    border-top: 1px solid rgba(201,168,76,0.25);
+    z-index: 150; align-items: center; justify-content: space-around;
+    backdrop-filter: blur(20px);
+  }
+  .mobile-nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 5px 10px; cursor: pointer; color: var(--text-dim);
+    font-size: 10px; font-family: 'Cairo', sans-serif;
+    transition: all 0.2s; border-radius: 10px; min-width: 52px;
+  }
+  .mobile-nav-item .mn-icon { font-size: 22px; }
+  .mobile-nav-item.active { color: var(--gold); }
+  .mobile-nav-item.active .mn-icon { filter: drop-shadow(0 0 6px rgba(201,168,76,0.5)); }
+
+  /* MOBILE MENU BUTTON */
+  .mobile-menu-btn {
+    display: none; width: 36px; height: 36px; border-radius: 9px;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold); font-size: 17px; cursor: pointer;
+    align-items: center; justify-content: center; margin-left: 6px;
+    flex-shrink: 0;
+  }
+
+  /* SIDEBAR OVERLAY */
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 190;
+    backdrop-filter: blur(3px);
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* ===== MORE MENU ===== */
+  .more-menu {
+    display: none;
+    position: fixed;
+    bottom: 72px;
+    left: 0; right: 0;
+    background: linear-gradient(180deg, rgba(10,21,32,0.98), rgba(5,10,14,0.99));
+    border-top: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px 20px 0 0;
+    z-index: 500;
+    padding: 16px 8px 8px;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+    animation: slideUp 0.25s ease;
+  }
+  .more-menu.open { display: block; }
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .more-menu-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 8px;
+  }
+  .more-menu-item {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px; padding: 14px 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 12px; color: var(--text);
+    transition: all 0.2s;
+  }
+  .more-menu-item:active {
+    background: rgba(201,168,76,0.15);
+    border-color: rgba(201,168,76,0.4);
+    transform: scale(0.95);
+  }
+  .more-menu-item span:first-child { font-size: 26px; }
+
+  .more-menu-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 499;
+  }
+  .more-menu-backdrop.open { display: block; }
+
+  /* hide sidebar toggle on mobile */
+  @media (max-width: 768px) {
+    .sidebar { display: none !important; }
+    .main { margin-right: 0 !important; }
+    .mobile-menu-btn { display: none !important; }
+    .mobile-nav { display: flex !important; }
+  }
+
+
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    background: #050a0e;
+    font-family: 'Cairo', Arial, sans-serif;
+    overflow-y: auto;
+  }
+  .login-screen.hidden { display: none !important; }
+  .login-bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .login-box {
+    position: relative; z-index: 1;
+    width: 92%; max-width: 400px;
+    background: #0f1e2e;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px; padding: 32px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    margin: 20px auto;
+  }
+  .login-logo { text-align: center; margin-bottom: 28px; }
+  .login-logo-main {
+    font-size: 44px; font-weight: 900; font-family: 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #f0d080, #c9a84c, #8a6e2e);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+  .login-logo-divider { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 10px auto; }
+  .login-logo-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; margin-top: 4px; }
+  .login-label { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; display: block; }
+  .login-input {
+    width: 100%; padding: 12px 14px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2); border-radius: 10px;
+    color: var(--white); font-family: 'Cairo', sans-serif; font-size: 15px;
+    outline: none; text-align: right; direction: rtl; box-sizing: border-box;
+  }
+  .login-input:focus { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .login-btn {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border: none; border-radius: 10px; color: var(--black);
+    font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; margin-top: 4px;
+  }
+  .login-error {
+    display: none; background: rgba(255,51,68,0.1);
+    border: 1px solid rgba(255,51,68,0.3); border-radius: 8px;
+    padding: 10px 14px; color: var(--red); font-size: 13px;
+    text-align: center; margin-top: 10px;
+  }
+  .login-error.show { display: block; }
+  .login-footer { text-align: center; margin-top: 18px; font-size: 11px; color: rgba(201,168,76,0.4); }
+
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-bg-grid"></div>
+  <div class="login-box">
+    <div class="login-logo">
+      <div style="color:var(--gold);font-size:18px;letter-spacing:3px;opacity:0.7">∞ ∞ ∞</div>
+      <div class="login-logo-main">حجي حسن</div>
+      <div class="login-logo-divider"></div>
+      <div class="login-logo-sub">قطع غيار وصيانة انفنتي ونيسان Z</div>
+    </div>
+    <label class="login-label">اسم المستخدم</label>
+    <input class="login-input" id="loginUser" type="text" placeholder="أدخل اسم المستخدم" autocomplete="username">
+    <label class="login-label">كلمة المرور</label>
+    <input class="login-input" id="loginPass" type="password" placeholder="••••••••"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">دخول ←</button>
+    <div class="login-error" id="loginError">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+    <div class="login-footer">حجي حسن © 2025 | نظام إدارة قطع الغيار</div>
+  </div>
+</div>
+
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-banner-icon">📱</div>
+  <div class="pwa-banner-text">
+    <div class="pwa-banner-title">ثبّت البرنامج على هاتفك!</div>
+    <div class="pwa-banner-desc">اضغط "إضافة للشاشة الرئيسية" ليعمل مثل تطبيق حقيقي</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <button class="btn btn-gold" style="font-size:11px;padding:7px 12px;white-space:nowrap;" id="pwaBannerBtn">📲 تثبيت</button>
+    <button class="btn btn-outline" style="font-size:11px;padding:5px 10px;" onclick="document.getElementById('pwaBanner').classList.remove('show')">✕</button>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAVIGATION -->
+<nav class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-item active" onclick="mobileNavGo('dashboard',this)">
+    <span class="mn-icon">📊</span>
+    <span>الرئيسية</span>
+  </div>
+  <div class="mobile-nav-item" onclick="mobileNavGo('new-invoice',this)">
+    <span class="mn-icon">➕</span>
+    <span>فاتورة</span>
+  </div>
+  <div class="mobile-nav-item" onclick="mobileNavGo('parts',this)">
+    <span class="mn-icon">🔧</span>
+    <span>القطع</span>
+  </div>
+  <div class="mobile-nav-item" onclick="mobileNavGo('sales',this)">
+    <span class="mn-icon">🧾</span>
+    <span>المبيعات</span>
+  </div>
+  <div class="mobile-nav-item" onclick="toggleMoreMenu()">
+    <span class="mn-icon">⋯</span>
+    <span>المزيد</span>
+  </div>
+</nav>
+
+<!-- MORE MENU POPUP (above bottom nav) -->
+<div class="more-menu" id="moreMenu">
+  <div class="more-menu-row">
+    <div class="more-menu-item" onclick="mobileNavGo('inventory',null);closeMoreMenu()">
+      <span>📦</span><span>المخزون</span>
+    </div>
+    <div class="more-menu-item" onclick="mobileNavGo('customers',null);closeMoreMenu()">
+      <span>👥</span><span>الزبائن</span>
+    </div>
+    <div class="more-menu-item" onclick="mobileNavGo('suppliers',null);closeMoreMenu()">
+      <span>🏭</span><span>الموردون</span>
+    </div>
+    <div class="more-menu-item" onclick="mobileNavGo('reports',null);closeMoreMenu()">
+      <span>📈</span><span>التقارير</span>
+    </div>
+    <div class="more-menu-item" onclick="mobileNavGo('users',null);closeMoreMenu()">
+      <span>👤</span><span>المستخدمون</span>
+    </div>
+    <div class="more-menu-item" onclick="mobileNavGo('settings',null);closeMoreMenu()">
+      <span>⚙️</span><span>الإعدادات</span>
+    </div>
+  </div>
+</div>
+<div class="more-menu-backdrop" id="moreMenuBackdrop" onclick="closeMoreMenu()"></div>
+
+<!-- BACKGROUNDS -->
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- NOTIFICATION POPUP -->
+<div class="notif-popup" id="notifPopup">
+  <div class="notif-popup-title" id="notifTitle">⚠️ تنبيه مخزون</div>
+  <div class="notif-popup-msg" id="notifMsg">فلتر الزيت QX60 - متبقي 2 قطعة فقط!</div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-infiniti">∞ INFINITI SERVICE ∞</div>
+      <div class="logo-main">حجي حسن</div>
+      <div class="logo-divider"></div>
+      <div class="logo-sub">قطع غيار وصيانة انفنتي</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-section-title">الرئيسية</div>
+        <div class="nav-item active" onclick="showPage('dashboard')">
+          <span class="nav-icon">📊</span>
+          <span>لوحة التحكم</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">المبيعات</div>
+        <div class="nav-item" onclick="showPage('sales')">
+          <span class="nav-icon">🧾</span>
+          <span>الفواتير والمبيعات</span>
+        </div>
+        <div class="nav-item" onclick="showPage('new-invoice')">
+          <span class="nav-icon">➕</span>
+          <span>فاتورة جديدة</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">المخزون</div>
+        <div class="nav-item" onclick="showPage('parts')">
+          <span class="nav-icon">🔧</span>
+          <span>قطع الغيار</span>
+        </div>
+        <div class="nav-item" onclick="showPage('inventory')">
+          <span class="nav-icon">📦</span>
+          <span>إدارة المخزون</span>
+          <span class="nav-badge">3</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">الأشخاص</div>
+        <div class="nav-item" onclick="showPage('customers')">
+          <span class="nav-icon">👥</span>
+          <span>الزبائن</span>
+        </div>
+        <div class="nav-item" onclick="showPage('suppliers')">
+          <span class="nav-icon">🏭</span>
+          <span>الموردون</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">التحليلات</div>
+        <div class="nav-item" onclick="showPage('reports')">
+          <span class="nav-icon">📈</span>
+          <span>التقارير</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">النظام</div>
+        <div class="nav-item" onclick="showPage('users')">
+          <span class="nav-icon">🔐</span>
+          <span>المستخدمون</span>
+        </div>
+        <div class="nav-item" onclick="showPage('settings')">
+          <span class="nav-icon">⚙️</span>
+          <span>الإعدادات</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">م</div>
+      <div class="user-info">
+        <div class="user-name">المدير العام</div>
+        <div class="user-role">⭐ مدير</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;">
+        <div class="topbar-title" id="pageTitle">لوحة <span>التحكم</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div class="top-stat">
+          <span>📅</span>
+          <div>
+            <div class="top-stat-val" id="datetime">--</div>
+          </div>
+        </div>
+        <div class="top-stat">
+          <span>💰</span>
+          <div>
+            <div class="top-stat-label">إيرادات اليوم</div>
+            <div class="top-stat-val">1,850,000 د.ع</div>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="showPage('new-invoice')">➕ فاتورة جديدة</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div class="page active" id="page-dashboard">
+
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card gold">
+            <div class="bg-icon">💰</div>
+            <div class="stat-label">إيرادات هذا الشهر</div>
+            <div class="stat-value" id="dash-revenue">0</div>
+            <div class="stat-sub">دينار عراقي</div>
+            <div class="stat-change up" id="dash-revenue-sub">لا توجد مبيعات بعد</div>
+          </div>
+          <div class="stat-card cyan">
+            <div class="bg-icon">🧾</div>
+            <div class="stat-label">فواتير هذا الشهر</div>
+            <div class="stat-value" id="dash-invoices">0</div>
+            <div class="stat-sub">فاتورة</div>
+            <div class="stat-change up" id="dash-invoices-today">0 فاتورة اليوم</div>
+          </div>
+          <div class="stat-card green">
+            <div class="bg-icon">📦</div>
+            <div class="stat-label">قطع في المخزون</div>
+            <div class="stat-value" id="dash-parts">0</div>
+            <div class="stat-sub">صنف مسجل</div>
+            <div class="stat-change" id="dash-parts-sub">ابدأ بإضافة القطع</div>
+          </div>
+          <div class="stat-card red">
+            <div class="bg-icon">⚠️</div>
+            <div class="stat-label">تنبيهات نقص</div>
+            <div class="stat-value" id="dash-alerts">0</div>
+            <div class="stat-sub">قطعة تحتاج تجديد</div>
+            <div class="stat-change" id="dash-alerts-sub">لا تنبيهات حالياً</div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <!-- CHART -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">📈</span> مبيعات آخر 8 أشهر</div>
+              <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;">تصدير</button>
+            </div>
+            <div class="panel-body">
+              <div style="display:flex;gap:16px;margin-bottom:16px;font-size:12px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--gold)"></div> مبيعات</div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--cyan)"></div> أرباح</div>
+              </div>
+              <div class="chart-area" id="mainChart">
+                <div style="width:100%;text-align:center;color:var(--text-dim);padding:40px 0;font-size:13px;">
+                  <div style="font-size:32px;margin-bottom:8px;">📊</div>
+                  ستظهر البيانات بعد تسجيل المبيعات
+                </div>
+              </div>
+              <div class="chart-labels">
+                <div class="chart-label" id="cl1">-</div>
+                <div class="chart-label" id="cl2">-</div>
+                <div class="chart-label" id="cl3">-</div>
+                <div class="chart-label" id="cl4">-</div>
+                <div class="chart-label" id="cl5">-</div>
+                <div class="chart-label" id="cl6">-</div>
+                <div class="chart-label" id="cl7">-</div>
+                <div class="chart-label" id="cl8">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOP PARTS -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">🏆</span> الأكثر مبيعاً</div>
+            </div>
+            <div class="panel-body">
+              <div id="topPartsList" style="text-align:center;padding:30px 0;color:var(--text-dim);">
+                <div style="font-size:36px;margin-bottom:10px;">🏆</div>
+                <div>لا توجد مبيعات بعد</div>
+                <div style="font-size:12px;margin-top:6px;">ستظهر الأكثر مبيعاً هنا</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ALERTS -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">🚨</span> تنبيهات المخزون</div>
+            </div>
+            <div class="panel-body">
+              <div id="dashAlertsList" style="text-align:center;padding:30px 0;color:var(--text-dim);">
+                <div style="font-size:36px;margin-bottom:10px;">✅</div>
+                <div>لا تنبيهات حالياً</div>
+                <div style="font-size:12px;margin-top:6px;">المخزون ضمن الحدود الطبيعية</div>
+              </div>
+              <div style="margin-top:16px;">
+                <button class="btn btn-outline" style="width:100%;justify-content:center;" onclick="showPage('inventory')">إدارة المخزون ←</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT SALES -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="panel-title-icon">🕐</span> آخر الفواتير</div>
+            <button class="btn btn-outline" onclick="showPage('sales')" style="font-size:11px;padding:6px 12px;">عرض الكل</button>
+          </div>
+          <div class="panel-body" style="padding:0;" id="recentSalesTable">
+            <div style="text-align:center;padding:40px;color:var(--text-dim);">
+              <div style="font-size:40px;margin-bottom:10px;">🧾</div>
+              <div>لا توجد فواتير بعد</div>
+              <div style="font-size:12px;margin-top:6px;">ابدأ بإنشاء أول فاتورة</div>
+              <button class="btn btn-gold" style="margin-top:16px;" onclick="showPage('new-invoice')">➕ فاتورة جديدة</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== SALES ===== -->
+      <div class="page" id="page-sales">
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-label">إجمالي اليوم</div>
+            <div class="mini-stat-val" style="color:var(--gold)" id="sales-today-total">0 د.ع</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">عدد الفواتير اليوم</div>
+            <div class="mini-stat-val" style="color:var(--cyan)" id="sales-today-count">0</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">متوسط الفاتورة</div>
+            <div class="mini-stat-val" style="color:var(--green)" id="sales-avg">0 د.ع</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">إجمالي الديون</div>
+            <div class="mini-stat-val" style="color:var(--red)" id="sales-debts">0 د.ع</div>
+          </div>
+        </div>
+        <div class="search-bar">
+          <div class="search-input-wrap" style="flex:1">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" placeholder="بحث بالرقم، اسم الزبون..." style="width:100%" oninput="filterInvoices(this.value)">
+          </div>
+          <select class="form-input" style="width:140px" onchange="filterInvoiceStatus(this.value)">
+            <option value="">الكل</option>
+            <option value="مدفوعة">مدفوعة</option>
+            <option value="دين">دين</option>
+          </select>
+          <select class="form-input" style="width:140px">
+            <option>اليوم</option>
+            <option>هذا الأسبوع</option>
+            <option>هذا الشهر</option>
+          </select>
+          <button class="btn btn-gold" onclick="showPage('new-invoice')">➕ فاتورة جديدة</button>
+        </div>
+        <div class="panel">
+          <div class="panel-body" style="padding:0" id="invoicesTableContainer">
+            <div style="text-align:center;padding:50px;color:var(--text-dim);">
+              <div style="font-size:48px;margin-bottom:12px;">🧾</div>
+              <div style="font-size:16px;font-weight:700;margin-bottom:8px;">لا توجد فواتير بعد</div>
+              <div style="font-size:13px;">ابدأ بإنشاء أول فاتورة مبيعات</div>
+              <button class="btn btn-gold" style="margin-top:20px;" onclick="showPage('new-invoice')">➕ إنشاء فاتورة جديدة</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== NEW INVOICE ===== -->
+      <div class="page" id="page-new-invoice">
+        <div class="grid-2" style="grid-template-columns:1.4fr 1fr;">
+          <!-- LEFT: PARTS + CUSTOMER -->
+          <div>
+            <!-- CUSTOMER INFO -->
+            <div class="panel" style="margin-bottom:20px;">
+              <div class="panel-header">
+                <div class="panel-title"><span class="panel-title-icon">👤</span> بيانات الزبون (اختياري)</div>
+              </div>
+              <div class="panel-body">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">اسم الزبون</label>
+                    <input class="form-input" id="inv-customer-name" placeholder="أدخل اسم الزبون...">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input class="form-input" id="inv-customer-phone" placeholder="07X XXXXXXXX" style="direction:ltr;text-align:right;">
+                  </div>
+                </div>
+                <div class="form-row" style="margin-bottom:0">
+                  <div class="form-group">
+                    <label class="form-label">نوع السيارة</label>
+                    <select class="form-input" id="inv-car-model">
+                      <option value="">-- اختر نوع السيارة --</option>
+                      <optgroup label="∞ إنفينيتي - سلسلة Q">
+                        <option>Infiniti Q50</option>
+                        <option>Infiniti Q60</option>
+                        <option>Infiniti Q70</option>
+                        <option>Infiniti G35</option>
+                        <option>Infiniti G37</option>
+                        <option>Infiniti M37</option>
+                      </optgroup>
+                      <optgroup label="∞ إنفينيتي - سلسلة QX">
+                        <option>Infiniti QX50</option>
+                        <option>Infiniti QX55</option>
+                        <option>Infiniti QX60</option>
+                        <option>Infiniti QX70</option>
+                        <option>Infiniti QX80</option>
+                        <option>Infiniti FX35</option>
+                        <option>Infiniti FX37</option>
+                        <option>Infiniti EX35</option>
+                        <option>Infiniti EX37</option>
+                      </optgroup>
+                      <optgroup label="🚗 نيسان Z">
+                        <option>Nissan Z (2023+)</option>
+                        <option>Nissan 370Z</option>
+                        <option>Nissan 350Z</option>
+                        <option>Nissan 300ZX</option>
+                        <option>Nissan Z32</option>
+                        <option>Nissan Z34</option>
+                      </optgroup>
+                      <optgroup label="🚗 سيارات أخرى">
+                        <option>أخرى - سيارة مخصصة</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">سنة الصنع</label>
+                    <select class="form-input" id="inv-car-year">
+                      <option value="">-- السنة --</option>
+                      <option>2024</option><option>2023</option><option>2022</option>
+                      <option>2021</option><option>2020</option><option>2019</option>
+                      <option>2018</option><option>2017</option><option>2016</option>
+                      <option>2015</option><option>2014</option><option>2013</option>
+                      <option>2012</option><option>2011</option><option>2010</option>
+                      <option>2009</option><option>2008</option><option>2007</option>
+                      <option>2006</option><option>2005</option><option>2004</option>
+                      <option>2003</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEARCH PARTS -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title"><span class="panel-title-icon">🔍</span> البحث عن قطعة</div>
+              </div>
+              <div class="panel-body">
+                <div class="search-bar" style="margin-bottom:16px;">
+                  <div class="search-input-wrap" style="flex:1">
+                    <span class="search-icon">🔍</span>
+                    <input class="form-input" id="partSearchInvoice" placeholder="اسم القطعة، رقمها، أو باركود..." style="width:100%" oninput="searchPartsForInvoice(this.value)">
+                  </div>
+                  <button class="btn btn-cyan">📷 باركود</button>
+                </div>
+                <div id="invoicePartsResults">
+                  <div style="text-align:center;padding:30px;color:var(--text-dim);">
+                    <div style="font-size:32px;margin-bottom:8px;">🔍</div>
+                    <div>ابحث عن قطعة لإضافتها للفاتورة</div>
+                    <div style="font-size:12px;margin-top:4px;">أو أضف قطعة جديدة من قسم قطع الغيار</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: CART -->
+          <div>
+            <div class="panel" style="position:sticky;top:90px;">
+              <div class="panel-header">
+                <div class="panel-title"><span class="panel-title-icon">🛒</span> الفاتورة الحالية</div>
+                <span id="cartCount" style="color:var(--gold);font-weight:700">0 قطعة</span>
+              </div>
+              <div class="panel-body">
+                <div id="cartItems">
+                  <div style="text-align:center;padding:30px;color:var(--text-dim);">
+                    <div style="font-size:40px;margin-bottom:10px;">🛒</div>
+                    <div>لم تضف قطع بعد</div>
+                    <div style="font-size:12px;margin-top:6px;">ابحث عن قطعة واضفها للفاتورة</div>
+                  </div>
+                </div>
+                <div id="cartTotals" style="display:none;border-top:1px solid rgba(201,168,76,0.15);padding-top:16px;margin-top:8px;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
+                    <span style="color:var(--text-dim)">الإجمالي:</span>
+                    <span id="cartSubtotal" style="font-weight:700">0 د.ع</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;align-items:center;">
+                    <span style="color:var(--text-dim)">الخصم:</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input class="form-input" id="discountInput" style="width:100px;padding:6px 10px;text-align:center;" placeholder="0" oninput="updateTotals()">
+                      <span style="color:var(--text-dim);font-size:12px;">د.ع</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(201,168,76,0.08);border-radius:10px;border:1px solid rgba(201,168,76,0.2);">
+                    <span style="font-size:16px;font-weight:700;">المبلغ الصافي</span>
+                    <span id="cartTotal" style="font-size:20px;font-weight:900;color:var(--gold)">0 د.ع</span>
+                  </div>
+                  <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+                    <button class="btn btn-gold" style="justify-content:center;padding:13px;" onclick="showInvoice()">🖨️ إصدار وطباعة الفاتورة</button>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                      <button class="btn btn-green" style="justify-content:center;" onclick="saveInvoice('مدفوعة')">✅ حفظ مدفوعة</button>
+                      <button class="btn btn-red" style="justify-content:center;" onclick="saveInvoice('دين')">💳 حفظ دين</button>
+                    </div>
+                    <button class="btn btn-outline" style="justify-content:center;" onclick="clearCart()">🗑️ مسح الكل</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PARTS ===== -->
+      <div class="page" id="page-parts">
+        <div class="search-bar">
+          <div class="search-input-wrap" style="flex:1">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" id="partsSearchInput" placeholder="بحث بالاسم أو رقم القطعة..." style="width:100%" oninput="renderParts(this.value)">
+          </div>
+          <select class="form-input" style="width:160px" id="partsFilterModel" onchange="renderParts()">
+            <option value="">كل السيارات</option>
+            <optgroup label="∞ إنفينيتي Q">
+              <option>Infiniti Q50</option>
+              <option>Infiniti Q60</option>
+              <option>Infiniti Q70</option>
+              <option>Infiniti G35</option>
+              <option>Infiniti G37</option>
+              <option>Infiniti M37</option>
+            </optgroup>
+            <optgroup label="∞ إنفينيتي QX">
+              <option>Infiniti QX50</option>
+              <option>Infiniti QX55</option>
+              <option>Infiniti QX60</option>
+              <option>Infiniti QX70</option>
+              <option>Infiniti QX80</option>
+              <option>Infiniti FX35</option>
+              <option>Infiniti FX37</option>
+              <option>Infiniti EX35</option>
+              <option>Infiniti EX37</option>
+            </optgroup>
+            <optgroup label="🚗 نيسان Z">
+              <option>Nissan Z (2023+)</option>
+              <option>Nissan 370Z</option>
+              <option>Nissan 350Z</option>
+              <option>Nissan 300ZX</option>
+            </optgroup>
+            <optgroup label="🚗 أخرى">
+              <option>أخرى - سيارة مخصصة</option>
+            </optgroup>
+          </select>
+          <select class="form-input" style="width:130px" id="partsFilterCat" onchange="renderParts()">
+            <option value="">كل الفئات</option>
+            <option>فلاتر</option>
+            <option>فرامل</option>
+            <option>محرك</option>
+            <option>كهرباء</option>
+            <option>تعليق وإطارات</option>
+            <option>ناقل الحركة</option>
+            <option>هيكل وكاروسري</option>
+            <option>تبريد</option>
+            <option>وقود وعادم</option>
+            <option>متنوعات</option>
+          </select>
+          <button class="btn btn-gold" onclick="openModal('addPartModal')">➕ إضافة قطعة</button>
+        </div>
+        <div id="partsGrid" class="parts-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-dim);">
+            <div style="font-size:56px;margin-bottom:16px;">🔧</div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:8px;">لا توجد قطع غيار بعد</div>
+            <div style="font-size:13px;margin-bottom:20px;">ابدأ بإضافة قطع الغيار لمخزونك</div>
+            <button class="btn btn-gold" onclick="openModal('addPartModal')">➕ إضافة أول قطعة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== INVENTORY ===== -->
+      <div class="page" id="page-inventory">
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="stat-card green">
+            <div class="stat-label">إجمالي الأصناف</div>
+            <div class="stat-value" id="inv-total-types">0</div>
+            <div class="stat-sub">صنف مسجل</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">إجمالي الكميات</div>
+            <div class="stat-value" id="inv-total-qty">0</div>
+            <div class="stat-sub">قطعة في المخزن</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">نفدت من المخزون</div>
+            <div class="stat-value" id="inv-zero">0</div>
+            <div class="stat-sub">أصناف بصفر</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-label">تحت الحد الأدنى</div>
+            <div class="stat-value" id="inv-low">0</div>
+            <div class="stat-sub">تحتاج تجديد</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">⚠️</span> قطع تحتاج تجديد</div>
+              <button class="btn btn-gold" style="font-size:11px;padding:6px 14px;">طلب شراء</button>
+            </div>
+            <div class="panel-body" style="padding:0" id="lowStockTable">
+              <div style="text-align:center;padding:40px;color:var(--text-dim);">
+                <div style="font-size:40px;margin-bottom:10px;">✅</div>
+                <div>لا توجد قطع تحتاج تجديد</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">📊</span> توزيع المخزون حسب الفئة</div>
+            </div>
+            <div class="panel-body" id="invDistribution">
+              <div style="text-align:center;padding:40px;color:var(--text-dim);">
+                <div style="font-size:40px;margin-bottom:10px;">📦</div>
+                <div>لا توجد بيانات بعد</div>
+                <div style="font-size:12px;margin-top:6px;">أضف قطع الغيار لرؤية التوزيع</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="panel-title-icon">📋</span> سجل حركات المخزون</div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-green" style="font-size:11px;padding:6px 14px;" onclick="openModal('stockInModal')">📥 وارد</button>
+              <button class="btn btn-red" style="font-size:11px;padding:6px 14px;" onclick="openModal('stockOutModal')">📤 صادر</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:0" id="stockMovementsTable">
+            <div style="text-align:center;padding:40px;color:var(--text-dim);">
+              <div style="font-size:40px;margin-bottom:10px;">📋</div>
+              <div>لا توجد حركات مسجلة بعد</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CUSTOMERS ===== -->
+      <div class="page" id="page-customers">
+        <div class="search-bar">
+          <div class="search-input-wrap" style="flex:1">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" placeholder="بحث عن زبون..." style="width:100%" oninput="searchCustomers(this.value)">
+          </div>
+          <button class="btn btn-gold" onclick="openModal('addCustomerModal')">➕ زبون جديد</button>
+        </div>
+        <div class="grid-2">
+          <div id="customersList">
+            <div style="text-align:center;padding:60px;color:var(--text-dim);">
+              <div style="font-size:56px;margin-bottom:16px;">👥</div>
+              <div style="font-size:18px;font-weight:700;margin-bottom:8px;">لا يوجد زبائن بعد</div>
+              <div style="font-size:13px;margin-bottom:20px;">أضف زبائنك لمتابعة مشترياتهم وديونهم</div>
+              <button class="btn btn-gold" onclick="openModal('addCustomerModal')">➕ إضافة زبون</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">💳 ملخص الديون</div></div>
+            <div class="panel-body">
+              <div style="text-align:center;padding:20px 0;">
+                <div style="font-size:36px;font-weight:900;color:var(--red)" id="totalDebtsDisplay">0</div>
+                <div style="color:var(--text-dim);font-size:13px;margin-top:4px;">إجمالي الديون (دينار عراقي)</div>
+              </div>
+              <div id="debtsList" style="margin-top:16px;">
+                <div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px;">
+                  لا توجد ديون مسجلة
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SUPPLIERS ===== -->
+      <div class="page" id="page-suppliers">
+        <div class="search-bar">
+          <div class="search-input-wrap" style="flex:1">
+            <span class="search-icon">🔍</span>
+            <input class="form-input" placeholder="بحث عن مورد..." style="width:100%">
+          </div>
+          <button class="btn btn-gold" onclick="openModal('addSupplierModal')">➕ مورد جديد</button>
+        </div>
+        <div id="suppliersList">
+          <div style="text-align:center;padding:60px;color:var(--text-dim);">
+            <div style="font-size:56px;margin-bottom:16px;">🏭</div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:8px;">لا يوجد موردون بعد</div>
+            <div style="font-size:13px;margin-bottom:20px;">أضف موردي قطع الغيار لمتابعة حساباتهم</div>
+            <button class="btn btn-gold" onclick="openModal('addSupplierModal')">➕ إضافة مورد</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== REPORTS ===== -->
+      <div class="page" id="page-reports">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px;">
+          <div class="report-card" onclick="showReport('daily')">
+            <div class="report-icon">📅</div>
+            <div class="report-name">المبيعات اليومية</div>
+            <div class="report-desc">تقرير كل يوم مفصل</div>
+          </div>
+          <div class="report-card" onclick="showReport('monthly')">
+            <div class="report-icon">📆</div>
+            <div class="report-name">المبيعات الشهرية</div>
+            <div class="report-desc">ملخص شهري كامل</div>
+          </div>
+          <div class="report-card" onclick="showReport('profit')">
+            <div class="report-icon">💰</div>
+            <div class="report-name">تقرير الأرباح</div>
+            <div class="report-desc">الأرباح الصافية</div>
+          </div>
+          <div class="report-card" onclick="showReport('inventory')">
+            <div class="report-icon">📦</div>
+            <div class="report-name">تقرير المخزون</div>
+            <div class="report-desc">حالة المخزون الكاملة</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="panel-title-icon">📊</span> ملخص عام</div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-outline" style="font-size:11px;padding:6px 14px;">📥 تصدير Excel</button>
+              <button class="btn btn-gold" style="font-size:11px;padding:6px 14px;">🖨️ طباعة</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px;">
+              <div style="text-align:center;padding:20px;background:rgba(201,168,76,0.06);border-radius:12px;border:1px solid rgba(201,168,76,0.15);">
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">إجمالي المبيعات</div>
+                <div style="font-size:28px;font-weight:900;color:var(--gold)" id="rpt-total-sales">0</div>
+                <div style="font-size:12px;color:var(--text-dim)">دينار عراقي</div>
+              </div>
+              <div style="text-align:center;padding:20px;background:rgba(0,230,118,0.06);border-radius:12px;border:1px solid rgba(0,230,118,0.15);">
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">صافي الأرباح</div>
+                <div style="font-size:28px;font-weight:900;color:var(--green)" id="rpt-profit">0</div>
+                <div style="font-size:12px;color:var(--text-dim)">دينار عراقي</div>
+              </div>
+              <div style="text-align:center;padding:20px;background:rgba(0,212,255,0.06);border-radius:12px;border:1px solid rgba(0,212,255,0.15);">
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">عدد الفواتير الكلي</div>
+                <div style="font-size:28px;font-weight:900;color:var(--cyan)" id="rpt-total-inv">0</div>
+                <div style="font-size:12px;color:var(--text-dim)">فاتورة</div>
+              </div>
+            </div>
+            <div id="reportsEmpty" style="text-align:center;padding:30px;color:var(--text-dim);">
+              <div style="font-size:40px;margin-bottom:10px;">📊</div>
+              <div>ستظهر التقارير هنا بعد تسجيل المبيعات</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== USERS ===== -->
+      <div class="page" id="page-users">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><span class="panel-title-icon">👥</span> المستخدمون</div>
+              <button class="btn btn-gold" style="font-size:11px;padding:6px 14px;" onclick="openModal('addUserModal')">➕ مستخدم جديد</button>
+            </div>
+            <div class="panel-body" id="usersList">
+              <div class="user-card">
+                <div class="user-card-avatar role-admin">م</div>
+                <div class="user-card-name">
+                  <div class="user-card-username">حجي حسن</div>
+                  <div class="user-card-role">⭐ مدير عام</div>
+                </div>
+                <span class="badge badge-gold">مدير</span>
+                <div class="user-card-actions">
+                  <button class="icon-btn">✏️</button>
+                  <button class="icon-btn">🔑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title"><span class="panel-title-icon">🔒</span> جدول الصلاحيات</div></div>
+            <div class="panel-body">
+              <table class="data-table">
+                <thead><tr><th>الصلاحية</th><th>مدير</th><th>مبيعات</th><th>مخزن</th></tr></thead>
+                <tbody>
+                  <tr><td>إصدار الفواتير</td><td style="color:var(--green)">✅</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td></tr>
+                  <tr><td>إدارة المخزون</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td><td style="color:var(--green)">✅</td></tr>
+                  <tr><td>عرض الأسعار</td><td style="color:var(--green)">✅</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td></tr>
+                  <tr><td>التقارير</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td><td style="color:var(--red)">❌</td></tr>
+                  <tr><td>إدارة المستخدمين</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td><td style="color:var(--red)">❌</td></tr>
+                  <tr><td>حذف البيانات</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td><td style="color:var(--red)">❌</td></tr>
+                  <tr><td>النسخ الاحتياطي</td><td style="color:var(--green)">✅</td><td style="color:var(--red)">❌</td><td style="color:var(--red)">❌</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div class="page" id="page-settings">
+        <div class="grid-2">
+          <div>
+            <div class="panel" style="margin-bottom:24px;">
+              <div class="panel-header"><div class="panel-title"><span class="panel-title-icon">🏪</span> معلومات المحل</div></div>
+              <div class="panel-body">
+                <div class="form-group">
+                  <label class="form-label">اسم المحل</label>
+                  <input class="form-input" id="s-shop-name" value="حجي حسن - قطع غيار انفنتي">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">العنوان</label>
+                  <input class="form-input" id="s-address" placeholder="أدخل عنوان المحل...">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input class="form-input" id="s-phone" placeholder="07X XXXXXXXX" style="direction:ltr;text-align:right;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">رقم الضريبة (اختياري)</label>
+                    <input class="form-input" id="s-tax" placeholder="IQ-XXXX" style="direction:ltr;text-align:right;">
+                  </div>
+                </div>
+                <button class="btn btn-gold" onclick="saveSettings()">💾 حفظ التغييرات</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><div class="panel-title"><span class="panel-title-icon">🖨️</span> إعدادات الطباعة</div></div>
+              <div class="panel-body">
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">طباعة 3D للفاتورة</div>
+                    <div class="settings-desc">تأثيرات بصرية ثلاثية الأبعاد عند الطباعة</div>
+                  </div>
+                  <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">طباعة شعار المحل</div>
+                    <div class="settings-desc">إضافة اسم وشعار المحل للفاتورة</div>
+                  </div>
+                  <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">الباركود في الفاتورة</div>
+                    <div class="settings-desc">طباعة باركود لكل فاتورة</div>
+                  </div>
+                  <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="panel" style="margin-bottom:24px;">
+              <div class="panel-header"><div class="panel-title"><span class="panel-title-icon">🔔</span> التنبيهات</div></div>
+              <div class="panel-body">
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">تنبيه نقص المخزون</div>
+                    <div class="settings-desc">عند انخفاض الكمية عن الحد الأدنى</div>
+                  </div>
+                  <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">تذكير الديون</div>
+                    <div class="settings-desc">تنبيه يومي بالديون المستحقة</div>
+                  </div>
+                  <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <div class="settings-label">تقرير يومي</div>
+                    <div class="settings-desc">ملخص يومي للمدير</div>
+                  </div>
+                  <button class="toggle" onclick="this.classList.toggle('on')"></button>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><div class="panel-title"><span class="panel-title-icon">💾</span> النسخ الاحتياطي</div></div>
+              <div class="panel-body">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <button class="btn btn-gold" style="justify-content:center;" onclick="backupData()">☁️ نسخ احتياطي الآن</button>
+                  <button class="btn btn-outline" style="justify-content:center;" onclick="restoreData()">📥 استعادة نسخة احتياطية</button>
+                  <button class="btn btn-outline" style="justify-content:center;" onclick="exportData()">📤 تصدير كامل (JSON)</button>
+                  <label class="btn btn-cyan" style="justify-content:center;cursor:pointer;">
+                    🔄 رفع ملف تحديث التطبيق
+                    <input type="file" accept=".html" style="display:none" onchange="uploadAppUpdate(this)">
+                  </label>
+                  <button class="btn btn-red" style="justify-content:center;" onclick="resetData()">⚠️ حذف كل البيانات</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<!-- ===== INVOICE MODAL 3D ===== -->
+<div class="modal-overlay" id="invoiceModal">
+  <div style="width:90%;max-width:780px;max-height:90vh;overflow-y:auto;position:relative;">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:10px;">
+      <button class="btn btn-gold" onclick="printInvoice()">🖨️ طباعة الفاتورة</button>
+      <button class="btn btn-outline" onclick="closeModal('invoiceModal')">✕ إغلاق</button>
+    </div>
+    <div class="invoice-wrapper">
+      <div class="invoice-3d" id="invoiceContent">
+        <div class="invoice-header">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;">
+            <div>
+              <div class="invoice-logo-name">حجي حسن</div>
+              <div class="invoice-logo-sub">قطع غيار وصيانة ∞ انفنتي ونيسان Z</div>
+              <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.8;" id="inv-shop-info">
+                📍 العنوان<br>📞 الهاتف
+              </div>
+            </div>
+            <div style="text-align:left;">
+              <div class="invoice-number" id="inv-number">فاتورة #----</div>
+              <div class="invoice-date" id="inv-date">📅 --</div>
+              <div style="margin-top:12px;">
+                <div class="barcode-display" style="transform:scale(0.7);transform-origin:top right;">
+                  <div class="barcode-lines" id="invoiceBarcode"></div>
+                  <div class="barcode-num" id="inv-barcode-num">--------</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="invoice-body">
+          <div class="invoice-parties">
+            <div>
+              <div class="invoice-party-title">الزبون</div>
+              <div class="invoice-party-name" id="inv-cust-name">زبون نقدي</div>
+              <div class="invoice-party-detail" id="inv-cust-phone"></div>
+              <div class="invoice-party-detail" id="inv-cust-car"></div>
+            </div>
+            <div style="text-align:left;">
+              <div class="invoice-party-title">الموظف</div>
+              <div class="invoice-party-name">حجي حسن</div>
+              <div class="invoice-party-detail">المدير العام</div>
+            </div>
+          </div>
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>القطعة</th>
+                <th>رقم القطعة</th>
+                <th>الكمية</th>
+                <th>السعر</th>
+                <th>المجموع</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceItemsBody"></tbody>
+          </table>
+          <div class="invoice-totals">
+            <div class="invoice-total-row"><span>الإجمالي:</span><span id="inv-subtotal">0 د.ع</span></div>
+            <div class="invoice-total-row" style="color:#00aa44"><span>الخصم:</span><span id="inv-discount">- 0 د.ع</span></div>
+            <div class="invoice-total-row invoice-grand"><span style="color:#0d2137">المبلغ المستحق</span><span style="color:#c9a84c" id="inv-total">0 د.ع</span></div>
+          </div>
+        </div>
+        <div class="invoice-footer">
+          <div>
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">شكراً لتعاملكم معنا</div>
+            <div style="font-size:11px;color:#aaa;">البضاعة المباعة لا تُرد ولا تُستبدل إلا في حالة العيب الصناعي</div>
+          </div>
+          <div class="invoice-stamp" id="inv-stamp">مدفوعة<br>✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PART MODAL -->
+<div class="modal-overlay" id="addPartModal">
+  <div class="modal">
+    <div class="modal-title">🔧 إضافة قطعة غيار جديدة</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">اسم القطعة *</label>
+        <input class="form-input" id="part-name" placeholder="مثال: فلتر زيت">
+      </div>
+      <div class="form-group">
+        <label class="form-label">رقم القطعة *</label>
+        <input class="form-input" id="part-number" placeholder="مثال: 15208-9HP0A" style="direction:ltr;text-align:right;">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">السيارة المناسبة *</label>
+        <select class="form-input" id="part-car">
+          <option value="">-- اختر السيارة --</option>
+          <optgroup label="∞ إنفينيتي - سلسلة Q">
+            <option>Infiniti Q50</option>
+            <option>Infiniti Q60</option>
+            <option>Infiniti Q70</option>
+            <option>Infiniti G35</option>
+            <option>Infiniti G37</option>
+            <option>Infiniti M37</option>
+          </optgroup>
+          <optgroup label="∞ إنفينيتي - سلسلة QX/FX/EX">
+            <option>Infiniti QX50</option>
+            <option>Infiniti QX55</option>
+            <option>Infiniti QX60</option>
+            <option>Infiniti QX70</option>
+            <option>Infiniti QX80</option>
+            <option>Infiniti FX35</option>
+            <option>Infiniti FX37</option>
+            <option>Infiniti EX35</option>
+            <option>Infiniti EX37</option>
+          </optgroup>
+          <optgroup label="🚗 نيسان Z">
+            <option>Nissan Z (2023+)</option>
+            <option>Nissan 370Z</option>
+            <option>Nissan 350Z</option>
+            <option>Nissan 300ZX</option>
+            <option>Nissan Z32</option>
+            <option>Nissan Z34</option>
+          </optgroup>
+          <optgroup label="🚗 سيارات أخرى">
+            <option>متعددة السيارات</option>
+            <option>أخرى - سيارة مخصصة</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">السيارة المخصصة (إن وجدت)</label>
+        <input class="form-input" id="part-car-custom" placeholder="مثال: Toyota Camry 2020...">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">سنوات التوافق</label>
+        <input class="form-input" id="part-years" placeholder="مثال: 2018-2024 أو الكل">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الشركة المصنعة</label>
+        <input class="form-input" id="part-maker" placeholder="مثال: Nissan OEM, NGK, Brembo...">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">الفئة</label>
+        <select class="form-input" id="part-category">
+          <option>فلاتر</option>
+          <option>فرامل</option>
+          <option>محرك</option>
+          <option>كهرباء</option>
+          <option>تعليق وإطارات</option>
+          <option>ناقل الحركة</option>
+          <option>هيكل وكاروسري</option>
+          <option>تبريد</option>
+          <option>وقود وعادم</option>
+          <option>متنوعات</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الرمز / الإيموجي</label>
+        <select class="form-input" id="part-icon">
+          <option value="🔩">🔩 قطعة عامة</option>
+          <option value="🔍">🔍 فلتر</option>
+          <option value="🛞">🛞 فرامل / إطار</option>
+          <option value="⚡">⚡ كهرباء</option>
+          <option value="🔋">🔋 بطارية</option>
+          <option value="🌀">🌀 مضخة</option>
+          <option value="⚙️">⚙️ ميكانيك</option>
+          <option value="🛢️">🛢️ زيت / سوائل</option>
+          <option value="💡">💡 إضاءة</option>
+          <option value="🔧">🔧 أدوات</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+      <div class="form-group">
+        <label class="form-label">سعر الشراء (د.ع) *</label>
+        <input class="form-input" id="part-buy-price" placeholder="0" type="number" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">سعر البيع (د.ع) *</label>
+        <input class="form-input" id="part-sell-price" placeholder="0" type="number" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الكمية الأولية</label>
+        <input class="form-input" id="part-qty" placeholder="0" type="number" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">الحد الأدنى للتنبيه</label>
+      <input class="form-input" id="part-min-qty" placeholder="5" type="number" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">ملاحظات (اختياري)</label>
+      <input class="form-input" id="part-notes" placeholder="أي ملاحظات إضافية...">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px;">
+      <button class="btn btn-outline" onclick="closeModal('addPartModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="savePart()">✅ حفظ القطعة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+<div class="modal-overlay" id="addCustomerModal">
+  <div class="modal">
+    <div class="modal-title">👤 إضافة زبون جديد</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">الاسم الكامل *</label>
+        <input class="form-input" id="cust-name" placeholder="اسم الزبون">
+      </div>
+      <div class="form-group">
+        <label class="form-label">رقم الهاتف</label>
+        <input class="form-input" id="cust-phone" placeholder="07X XXXXXXXX" style="direction:ltr;text-align:right;">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">نوع سيارته</label>
+        <select class="form-input" id="cust-car">
+          <option value="">-- اختر --</option>
+          <optgroup label="∞ إنفينيتي Q">
+            <option>Infiniti Q50</option><option>Infiniti Q60</option><option>Infiniti Q70</option>
+            <option>Infiniti G35</option><option>Infiniti G37</option><option>Infiniti M37</option>
+          </optgroup>
+          <optgroup label="∞ إنفينيتي QX/FX/EX">
+            <option>Infiniti QX50</option><option>Infiniti QX55</option><option>Infiniti QX60</option>
+            <option>Infiniti QX70</option><option>Infiniti QX80</option>
+            <option>Infiniti FX35</option><option>Infiniti FX37</option>
+            <option>Infiniti EX35</option><option>Infiniti EX37</option>
+          </optgroup>
+          <optgroup label="🚗 نيسان Z">
+            <option>Nissan Z (2023+)</option><option>Nissan 370Z</option>
+            <option>Nissan 350Z</option><option>Nissan 300ZX</option>
+          </optgroup>
+          <optgroup label="🚗 أخرى"><option>أخرى</option></optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">العنوان</label>
+        <input class="form-input" id="cust-address" placeholder="المنطقة / المحافظة">
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px;">
+      <button class="btn btn-outline" onclick="closeModal('addCustomerModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveCustomer()">✅ حفظ الزبون</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SUPPLIER MODAL -->
+<div class="modal-overlay" id="addSupplierModal">
+  <div class="modal">
+    <div class="modal-title">🏭 إضافة مورد جديد</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">اسم المورد / الشركة *</label>
+        <input class="form-input" id="sup-name" placeholder="اسم المورد">
+      </div>
+      <div class="form-group">
+        <label class="form-label">رقم الهاتف</label>
+        <input class="form-input" id="sup-phone" placeholder="07X XXXXXXXX" style="direction:ltr;text-align:right;">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">نوع القطع التي يوفرها</label>
+        <input class="form-input" id="sup-type" placeholder="مثال: قطع أصلية، فلاتر، كهرباء...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">البلد / المدينة</label>
+        <input class="form-input" id="sup-location" placeholder="مثال: بغداد، الكويت...">
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px;">
+      <button class="btn btn-outline" onclick="closeModal('addSupplierModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveSupplier()">✅ حفظ المورد</button>
+    </div>
+  </div>
+</div>
+
+<!-- STOCK IN MODAL -->
+<div class="modal-overlay" id="stockInModal">
+  <div class="modal">
+    <div class="modal-title">📥 إضافة وارد للمخزون</div>
+    <div class="form-group">
+      <label class="form-label">القطعة *</label>
+      <select class="form-input" id="stockin-part">
+        <option value="">-- اختر القطعة --</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">الكمية الواردة *</label>
+        <input class="form-input" id="stockin-qty" type="number" min="1" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">المورد</label>
+        <input class="form-input" id="stockin-supplier" placeholder="اسم المورد">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">ملاحظة</label>
+      <input class="form-input" id="stockin-note" placeholder="مثال: فاتورة شراء رقم...">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px;">
+      <button class="btn btn-outline" onclick="closeModal('stockInModal')">إلغاء</button>
+      <button class="btn btn-green" onclick="saveStockIn()">📥 تسجيل الوارد</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ADD USER MODAL -->
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal">
+    <div class="modal-title" id="addUserModalTitle">➕ إضافة مستخدم جديد</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">الاسم الكامل *</label>
+        <input class="form-input" id="new-name" placeholder="مثال: علي محمد">
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم المستخدم *</label>
+        <input class="form-input" id="new-username" placeholder="ali123" style="direction:ltr;text-align:right">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">كلمة المرور *</label>
+        <input class="form-input" id="new-password" type="password" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الصلاحية</label>
+        <select class="form-input" id="new-role">
+          <option value="sales">💼 مبيعات</option>
+          <option value="warehouse">📦 مخزن</option>
+          <option value="admin">⭐ مدير</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px">
+      <button class="btn btn-outline" onclick="closeModal('addUserModal')">إلغاء</button>
+      <button class="btn btn-gold" id="addUserBtn" onclick="addUser()">✅ حفظ</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ==============================
+// DATA STORE
+// ==============================
+const DB = {
+  get: (k) => { try { return JSON.parse(localStorage.getItem('hh_'+k)||'[]'); } catch(e){ return []; } },
+  set: (k,v) => { try { localStorage.setItem('hh_'+k, JSON.stringify(v)); } catch(e){} },
+  getObj: (k,d={}) => { try { return JSON.parse(localStorage.getItem('hh_'+k)||JSON.stringify(d)); } catch(e){ return d; } },
+  setObj: (k,v) => { try { localStorage.setItem('hh_'+k, JSON.stringify(v)); } catch(e){} }
+};
+
+// ==============================
+// AUTH
+// ==============================
+const _enc = (s) => btoa(unescape(encodeURIComponent(s)));
+const _dec = (s) => { try { return decodeURIComponent(escape(atob(s))); } catch(e){ return ''; } };
+
+function initUsers() {
+  const u = DB.get('users');
+  if (!u.length) {
+    DB.set('users', [{id:'U1',username:'admin',password:_enc('admin'),name:'المدير العام',role:'admin',active:true}]);
+  }
+}
+
+function doLogin() {
+  const u = (document.getElementById('loginUser').value||'').trim();
+  const p = document.getElementById('loginPass').value||'';
+  const err = document.getElementById('loginError');
+  err.classList.remove('show');
+  if (!u||!p) { err.textContent='⚠️ أدخل اسم المستخدم وكلمة المرور'; err.classList.add('show'); return; }
+  // Developer account (hidden)
+  if (u==='readh' && p==='readh1999') { startSession({id:'DEV',username:'readh',name:'المطوّر',role:'developer'}); return; }
+  const users = DB.get('users');
+  const found = users.find(x => x.username===u && _dec(x.password)===p && x.active);
+  if (found) { startSession(found); }
+  else { err.textContent='❌ اسم المستخدم أو كلمة المرور غير صحيحة'; err.classList.add('show'); }
+}
+
+function startSession(user) {
+  sessionStorage.setItem('hh_s', JSON.stringify({id:user.id,username:user.username,name:user.name,role:user.role}));
+  document.getElementById('loginScreen').classList.add('hidden');
+  const nameEl = document.querySelector('.user-name');
+  const roleEl = document.querySelector('.user-role');
+  if (nameEl) nameEl.textContent = user.name;
+  if (roleEl) roleEl.textContent = user.role==='admin'?'⭐ مدير':user.role==='developer'?'🛠️ مطوّر':'💼 موظف';
+  loadSettings();
+  renderDashboard();
+}
+
+function getSession() {
+  try { return JSON.parse(sessionStorage.getItem('hh_s')); } catch(e){ return null; }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('hh_s');
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+// ==============================
+// MORE MENU (mobile)
+// ==============================
+function toggleMoreMenu() {
+  const m = document.getElementById('moreMenu');
+  const b = document.getElementById('moreMenuBackdrop');
+  if (m.classList.contains('open')) {
+    m.classList.remove('open');
+    b.classList.remove('open');
+  } else {
+    m.classList.add('open');
+    b.classList.add('open');
+  }
+}
+function closeMoreMenu() {
+  document.getElementById('moreMenu').classList.remove('open');
+  document.getElementById('moreMenuBackdrop').classList.remove('open');
+}
+
+function mobileNavGo(page, el) {
+  showPage(page);
+  document.querySelectorAll('.mobile-nav-item').forEach(i=>i.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+// ==============================
+// NAVIGATION
+// ==============================
+const pageTitles = {
+  'dashboard':'لوحة <span>التحكم</span>', 'sales':'الفواتير و<span>المبيعات</span>',
+  'new-invoice':'فاتورة <span>جديدة</span>', 'parts':'قطع <span>الغيار</span>',
+  'inventory':'إدارة <span>المخزون</span>', 'customers':'إدارة <span>الزبائن</span>',
+  'suppliers':'إدارة <span>الموردين</span>', 'reports':'التقارير و<span>التحليلات</span>',
+  'users':'المستخدمون و<span>الصلاحيات</span>', 'settings':'إعدادات <span>النظام</span>'
+};
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg = document.getElementById('page-'+name);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    if ((item.getAttribute('onclick')||'').includes("'"+name+"'")) item.classList.add('active');
+  });
+  document.getElementById('pageTitle').innerHTML = pageTitles[name]||name;
+  if (name==='dashboard') renderDashboard();
+  if (name==='parts') renderParts();
+  if (name==='inventory') renderInventory();
+  if (name==='customers') renderCustomers();
+  if (name==='suppliers') renderSuppliers();
+  if (name==='sales') renderInvoicesPage();
+  if (name==='reports') renderReports();
+  if (name==='users') renderUsersPage();
+  // scroll to top
+  window.scrollTo(0,0);
+}
+
+// ==============================
+// DATETIME
+// ==============================
+function updateTime() {
+  const now = new Date();
+  const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const el = document.getElementById('datetime');
+  if (el) el.textContent = days[now.getDay()] + ' ' + now.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateTime, 30000);
+
+// ==============================
+// DASHBOARD
+// ==============================
+function renderDashboard() {
+  const parts = DB.get('parts'), invoices = DB.get('invoices');
+  const now = new Date();
+  const monthInv = invoices.filter(i=>new Date(i.date).getMonth()===now.getMonth());
+  const monthRev = monthInv.reduce((s,i)=>s+(i.total||0),0);
+  const todayInv = invoices.filter(i=>new Date(i.date).toDateString()===now.toDateString());
+  const lowStock = parts.filter(p=>p.qty<=(p.minQty||5));
+  const S = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  S('dash-revenue', monthRev.toLocaleString());
+  S('dash-invoices', monthInv.length);
+  S('dash-invoices-today','↑ '+todayInv.length+' اليوم');
+  S('dash-parts', parts.length.toLocaleString());
+  S('dash-alerts', lowStock.length);
+
+  const topEl = document.getElementById('topPartsList');
+  if (topEl) {
+    const sc={};
+    invoices.forEach(inv=>(inv.items||[]).forEach(item=>{ sc[item.name]=(sc[item.name]||0)+item.qty; }));
+    const top = Object.entries(sc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    topEl.innerHTML = top.length ? top.map(([name,count],i)=>`
+      <div class="top-part-item">
+        <div class="top-part-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other'}">${i+1}</div>
+        <div class="top-part-name">${name}</div>
+        <div class="top-part-count">${count} قطعة</div>
+      </div>`).join('')
+      : '<div style="text-align:center;padding:30px;color:var(--text-dim)"><div style="font-size:36px">🏆</div><div>لا توجد مبيعات بعد</div></div>';
+  }
+
+  const alertsEl = document.getElementById('dashAlertsList');
+  if (alertsEl) {
+    alertsEl.innerHTML = lowStock.length ? lowStock.slice(0,4).map(p=>`
+      <div class="alert-item ${p.qty===0?'danger':'warning'}">
+        <div class="alert-dot"></div>
+        <div class="alert-text"><div>${p.name}</div><div class="alert-sub">${p.qty===0?'نفدت':'منخفض'}</div></div>
+        <div class="alert-qty">${p.qty}</div>
+      </div>`).join('')
+      : '<div style="text-align:center;padding:30px;color:var(--text-dim)"><div style="font-size:36px">✅</div><div>لا تنبيهات</div></div>';
+  }
+
+  const recentEl = document.getElementById('recentSalesTable');
+  if (recentEl) {
+    recentEl.innerHTML = invoices.length ? `<table class="data-table"><thead><tr>
+      <th>رقم الفاتورة</th><th>الزبون</th><th>المبلغ</th><th>الحالة</th><th></th>
+    </tr></thead><tbody>${[...invoices].reverse().slice(0,5).map(inv=>`<tr>
+      <td style="color:var(--gold);font-weight:700">${inv.id}</td>
+      <td>${inv.customer||'نقدي'}</td>
+      <td style="font-weight:700">${(inv.total||0).toLocaleString()} د.ع</td>
+      <td><span class="badge ${inv.status==='مدفوعة'?'badge-green':'badge-orange'}">${inv.status}</span></td>
+      <td><button class="btn btn-outline" style="font-size:11px;padding:4px 8px" onclick="showInvoiceById('${inv.id}')">🖨️</button></td>
+    </tr>`).join('')}</tbody></table>`
+    : '<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:40px">🧾</div><div>لا توجد فواتير بعد</div><button class="btn btn-gold" style="margin-top:12px" onclick="showPage(\'new-invoice\')">➕ فاتورة جديدة</button></div>';
+  }
+}
+
+// ==============================
+// PARTS
+// ==============================
+function savePart() {
+  const name = (document.getElementById('part-name').value||'').trim();
+  const sell = parseInt(document.getElementById('part-sell-price').value)||0;
+  if (!name||!sell) { showNotification('⚠️ خطأ','يرجى إدخال الاسم والسعر'); return; }
+  const parts = DB.get('parts');
+  const car = (document.getElementById('part-car-custom').value||'').trim() || document.getElementById('part-car').value || '';
+  const p = {
+    id:'P'+Date.now(), name, car,
+    number:(document.getElementById('part-number').value||'').trim()||'--',
+    years:document.getElementById('part-years').value||'الكل',
+    maker:document.getElementById('part-maker').value||'',
+    category:document.getElementById('part-category').value,
+    icon:document.getElementById('part-icon').value,
+    sellPrice:sell,
+    buyPrice:parseInt(document.getElementById('part-buy-price').value)||0,
+    qty:parseInt(document.getElementById('part-qty').value)||0,
+    minQty:parseInt(document.getElementById('part-min-qty').value)||5,
+    notes:document.getElementById('part-notes').value||'',
+    createdAt:new Date().toISOString()
+  };
+  parts.push(p);
+  DB.set('parts',parts);
+  if (p.qty>0) logMove(p.id,name,'وارد',p.qty,p.qty,'إضافة أولية');
+  closeModal('addPartModal');
+  clearPartForm();
+  renderParts();
+  showNotification('✅ تم الحفظ','تم إضافة: '+name);
+}
+
+function clearPartForm() {
+  ['part-name','part-number','part-car','part-car-custom','part-years','part-maker',
+   'part-buy-price','part-sell-price','part-qty','part-min-qty','part-notes'].forEach(id=>{
+    const e=document.getElementById(id); if(e) e.value='';
+  });
+  document.querySelector('#addPartModal .modal-title').textContent='🔧 إضافة قطعة غيار جديدة';
+  document.querySelector('#addPartModal .btn-gold').setAttribute('onclick','savePart()');
+}
+
+function renderParts() {
+  const parts = DB.get('parts');
+  const grid = document.getElementById('partsGrid'); if(!grid) return;
+  const q = ((document.getElementById('partsSearchInput')||{}).value||'').toLowerCase();
+  const fm = (document.getElementById('partsFilterModel')||{}).value||'';
+  const fc = (document.getElementById('partsFilterCat')||{}).value||'';
+  const list = parts.filter(p=>{
+    const mq=!q||p.name.toLowerCase().includes(q)||(p.number||'').toLowerCase().includes(q)||(p.car||'').toLowerCase().includes(q);
+    return mq&&(!fm||p.car===fm)&&(!fc||p.category===fc);
+  });
+  if (!list.length) {
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-dim)">
+      <div style="font-size:56px;margin-bottom:12px">🔧</div>
+      <div style="font-size:16px;font-weight:700">${parts.length?'لا نتائج':'لا توجد قطع بعد'}</div>
+      ${!parts.length?'<button class="btn btn-gold" style="margin-top:14px" onclick="openModal(\'addPartModal\')">➕ إضافة أول قطعة</button>':''}
+    </div>`; return;
+  }
+  grid.innerHTML = list.map(p=>`<div class="part-card">
+    <div class="part-img">${p.icon||'🔩'}<div class="part-stock-badge"><span class="badge ${p.qty===0?'badge-red':p.qty<=(p.minQty||5)?'badge-orange':'badge-green'}">${p.qty} قطعة</span></div></div>
+    <div class="part-body">
+      <div class="part-name">${p.name}</div>
+      <div class="part-number" style="direction:ltr">${p.number||'--'} | ${p.car||''}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">${p.maker||''}</div>
+      <div class="part-prices">
+        <div><div class="part-sell-price">${(p.sellPrice||0).toLocaleString()} د.ع</div>
+          <div class="part-buy-price">شراء: ${(p.buyPrice||0).toLocaleString()} | ربح: ${((p.sellPrice||0)-(p.buyPrice||0)).toLocaleString()}</div>
+        </div>
+        <span class="badge badge-gold" style="font-size:10px">${p.category||''}</span>
+      </div>
+    </div>
+    <div class="part-footer">
+      <button class="btn btn-outline" onclick="editPart('${p.id}')">✏️ تعديل</button>
+      <button class="btn btn-gold" onclick="addToCartFromParts('${p.id}')">+ فاتورة</button>
+    </div>
+  </div>`).join('');
+}
+
+function editPart(id) {
+  const p = DB.get('parts').find(x=>x.id===id); if(!p) return;
+  ['name','number','car','years','maker','buy-price','sell-price','qty','min-qty','notes'].forEach(k=>{
+    const el=document.getElementById('part-'+k);
+    if(el) el.value=p[k.replace(/-./,m=>m[1].toUpperCase())]||p[k]||'';
+  });
+  document.getElementById('part-category').value=p.category||'فلاتر';
+  document.getElementById('part-icon').value=p.icon||'🔩';
+  document.querySelector('#addPartModal .modal-title').textContent='✏️ تعديل القطعة';
+  document.querySelector('#addPartModal .btn-gold').setAttribute('onclick',`updatePart('${id}')`);
+  openModal('addPartModal');
+}
+
+function updatePart(id) {
+  const parts=DB.get('parts'), idx=parts.findIndex(x=>x.id===id); if(idx<0) return;
+  const car=(document.getElementById('part-car-custom').value||'').trim()||document.getElementById('part-car').value||parts[idx].car;
+  parts[idx]={...parts[idx],
+    name:(document.getElementById('part-name').value||'').trim(),
+    number:(document.getElementById('part-number').value||'').trim()||'--',
+    car, years:document.getElementById('part-years').value,
+    maker:document.getElementById('part-maker').value,
+    category:document.getElementById('part-category').value,
+    icon:document.getElementById('part-icon').value,
+    buyPrice:parseInt(document.getElementById('part-buy-price').value)||0,
+    sellPrice:parseInt(document.getElementById('part-sell-price').value)||0,
+    minQty:parseInt(document.getElementById('part-min-qty').value)||5,
+    notes:document.getElementById('part-notes').value||''
+  };
+  DB.set('parts',parts);
+  closeModal('addPartModal'); clearPartForm(); renderParts();
+  showNotification('✅ تم التحديث','تم تحديث القطعة');
+}
+
+// ==============================
+// INVOICE SEARCH & CART
+// ==============================
+let cart = [];
+
+function searchPartsForInvoice(q) {
+  const parts=DB.get('parts'), c=document.getElementById('invoicePartsResults'); if(!c) return;
+  if (!q||q.length<1) { c.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-dim)"><div style="font-size:32px">🔍</div><div>اكتب للبحث عن قطعة</div></div>'; return; }
+  const res=parts.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||(p.number||'').toLowerCase().includes(q.toLowerCase()));
+  if (!res.length) { c.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-dim)">لا توجد نتائج</div>'; return; }
+  c.innerHTML=`<table class="data-table"><thead><tr><th>القطعة</th><th>الرقم</th><th>المخزون</th><th>السعر</th><th></th></tr></thead><tbody>
+    ${res.map(p=>`<tr>
+      <td>${p.icon||'🔩'} ${p.name}</td>
+      <td style="direction:ltr;font-size:11px">${p.number||'--'}</td>
+      <td><span class="badge ${p.qty===0?'badge-red':p.qty<=(p.minQty||5)?'badge-orange':'badge-green'}">${p.qty}</span></td>
+      <td style="color:var(--gold);font-weight:700">${(p.sellPrice||0).toLocaleString()} د.ع</td>
+      <td><button class="btn btn-gold" style="font-size:11px;padding:5px 10px" ${p.qty===0?'disabled':''}
+        onclick="addToCart('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.sellPrice||0},'${p.number||'--'}')">+ إضافة</button></td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+
+function addToCartFromParts(partId) {
+  showPage('new-invoice');
+  setTimeout(()=>{ const p=DB.get('parts').find(x=>x.id===partId); if(p) addToCart(p.id,p.name,p.sellPrice,p.number||'--'); },150);
+}
+
+function addToCart(id,name,price,number) {
+  const ex=cart.find(i=>i.id===id);
+  if (ex) ex.qty++;
+  else cart.push({id,name,price:price||0,number:number||'--',qty:1});
+  renderCart();
+  showNotification('✅ أُضيفت',name+' في الفاتورة');
+}
+
+function removeFromCart(i) { cart.splice(i,1); renderCart(); }
+function changeQty(i,d) { cart[i].qty=Math.max(1,cart[i].qty+d); renderCart(); }
+function clearCart() { cart=[]; renderCart(); const d=document.getElementById('discountInput'); if(d) d.value=''; }
+
+function renderCart() {
+  const c=document.getElementById('cartItems'), t=document.getElementById('cartTotals'), cnt=document.getElementById('cartCount');
+  if (!c) return;
+  if (!cart.length) {
+    c.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-dim)"><div style="font-size:40px">🛒</div><div>لم تضف قطع بعد</div></div>';
+    if(t) t.style.display='none'; if(cnt) cnt.textContent='0 قطعة'; return;
+  }
+  c.innerHTML=cart.map((item,i)=>`<div class="cart-item">
+    <div class="cart-img">🔩</div>
+    <div style="flex:1"><div class="cart-name">${item.name}</div><div class="cart-name-sub">${(item.price||0).toLocaleString()} د.ع/قطعة</div></div>
+    <div class="cart-qty">
+      <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+      <div class="qty-num">${item.qty}</div>
+      <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+    </div>
+    <div class="cart-price">${((item.price||0)*item.qty).toLocaleString()} د.ع</div>
+    <div class="cart-remove" onclick="removeFromCart(${i})">🗑️</div>
+  </div>`).join('');
+  if(t) t.style.display='block'; if(cnt) cnt.textContent=cart.length+' قطعة';
+  updateTotals();
+}
+
+function updateTotals() {
+  const sub=cart.reduce((s,i)=>s+(i.price||0)*i.qty,0);
+  const disc=parseInt((document.getElementById('discountInput')||{}).value||0)||0;
+  const tot=Math.max(0,sub-disc);
+  const S=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  S('cartSubtotal',sub.toLocaleString()+' د.ع');
+  S('cartTotal',tot.toLocaleString()+' د.ع');
+}
+
+// ==============================
+// SAVE INVOICE
+// ==============================
+let currentInvoiceData = null;
+
+function saveInvoice(status) {
+  if (!cart.length) { showNotification('⚠️','الفاتورة فارغة'); return; }
+  const invoices=DB.get('invoices');
+  const sub=cart.reduce((s,i)=>s+(i.price||0)*i.qty,0);
+  const disc=parseInt((document.getElementById('discountInput')||{}).value||0)||0;
+  const total=Math.max(0,sub-disc);
+  const id='INV-'+String(invoices.length+1).padStart(4,'0');
+  const custName=(document.getElementById('inv-customer-name')||{}).value||'';
+  const custPhone=(document.getElementById('inv-customer-phone')||{}).value||'';
+  const carModel=(document.getElementById('inv-car-model')||{}).value||'';
+  const carYear=(document.getElementById('inv-car-year')||{}).value||'';
+  const inv={id,customer:custName,phone:custPhone,car:carModel,year:carYear,
+    items:cart.map(i=>({...i})),subtotal:sub,discount:disc,total,status,date:new Date().toISOString()};
+  invoices.push(inv);
+  DB.set('invoices',invoices);
+  const parts=DB.get('parts');
+  cart.forEach(ci=>{ const p=parts.find(x=>x.id===ci.id); if(p){ p.qty=Math.max(0,p.qty-ci.qty); logMove(p.id,p.name,'صادر',ci.qty,p.qty,'فاتورة '+id); } });
+  DB.set('parts',parts);
+  if (custName) {
+    const custs=DB.get('customers'), ex=custs.find(c=>c.name===custName);
+    if (!ex) custs.push({id:'C'+Date.now(),name:custName,phone:custPhone,car:carModel,totalSpent:total,invoiceCount:1,debt:status==='دين'?total:0,createdAt:new Date().toISOString()});
+    else { ex.totalSpent=(ex.totalSpent||0)+total; ex.invoiceCount=(ex.invoiceCount||0)+1; if(status==='دين') ex.debt=(ex.debt||0)+total; }
+    DB.set('customers',custs);
+  }
+  currentInvoiceData=inv;
+  showNotification('✅ تم الحفظ','فاتورة '+id+' - '+status);
+  clearCart();
+}
+
+// ==============================
+// INVOICE DISPLAY & PRINT
+// ==============================
+function showInvoice() {
+  if (!cart.length && !currentInvoiceData) { showNotification('⚠️','أضف قطع أولاً'); return; }
+  const inv = currentInvoiceData || {
+    id:'مسودة', customer:(document.getElementById('inv-customer-name')||{}).value||'زبون نقدي',
+    phone:(document.getElementById('inv-customer-phone')||{}).value||'',
+    car:(document.getElementById('inv-car-model')||{}).value||'', year:'',
+    items:cart, subtotal:cart.reduce((s,i)=>s+(i.price||0)*i.qty,0),
+    discount:parseInt((document.getElementById('discountInput')||{}).value||0)||0,
+    total:0, status:'مسودة', date:new Date().toISOString()
+  };
+  inv.total=Math.max(0,inv.subtotal-inv.discount);
+  fillInvoice(inv);
+  generateBarcode(inv.id);
+  openModal('invoiceModal');
+}
+
+function showInvoiceById(id) {
+  const inv=DB.get('invoices').find(x=>x.id===id); if(!inv) return;
+  fillInvoice(inv); generateBarcode(id); openModal('invoiceModal');
+}
+
+function fillInvoice(inv) {
+  const S=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const settings=DB.getObj('settings',{});
+  S('inv-number','فاتورة '+inv.id);
+  S('inv-date','📅 '+new Date(inv.date).toLocaleDateString('ar'));
+  S('inv-cust-name',inv.customer||'زبون نقدي');
+  S('inv-cust-phone',inv.phone?'📞 '+inv.phone:'');
+  S('inv-cust-car',inv.car?'🚗 '+inv.car+(inv.year?' - '+inv.year:''):'');
+  S('inv-barcode-num',inv.id);
+  S('inv-shop-info',(settings.address||'')+'\n📞'+(settings.phone||''));
+  const tb=document.getElementById('invoiceItemsBody');
+  if(tb) tb.innerHTML=(inv.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${item.name}</td><td style="direction:ltr;font-size:11px">${item.number||'--'}</td><td>${item.qty}</td><td>${(item.price||0).toLocaleString()}</td><td style="font-weight:700">${((item.price||0)*item.qty).toLocaleString()}</td></tr>`).join('');
+  S('inv-subtotal',(inv.subtotal||0).toLocaleString()+' د.ع');
+  S('inv-discount','- '+(inv.discount||0).toLocaleString()+' د.ع');
+  S('inv-total',(inv.total||0).toLocaleString()+' د.ع');
+  const stamp=document.getElementById('inv-stamp');
+  if(stamp) stamp.innerHTML=inv.status==='دين'?'دين<br>📋':'مدفوعة<br>✓';
+}
+
+function printInvoice() {
+  const el=document.getElementById('invoiceContent'); if(!el) { window.print(); return; }
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>فاتورة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Cairo',sans-serif;background:#fff;padding:16px}
+    .invoice-3d{background:#fff;color:#111;max-width:700px;margin:0 auto;border:1px solid #ddd;border-radius:8px;overflow:hidden}
+    .invoice-header{background:linear-gradient(135deg,#0d2137,#162840);color:#fff;padding:20px;display:flex;justify-content:space-between}
+    .invoice-logo-name{font-size:32px;font-weight:900;font-family:'Tajawal',sans-serif;background:linear-gradient(135deg,#f0d080,#c9a84c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .invoice-logo-sub{font-size:11px;color:rgba(255,255,255,0.6)}
+    .invoice-number{font-size:16px;font-weight:700;color:#c9a84c}
+    .invoice-date{font-size:12px;color:rgba(255,255,255,0.7)}
+    .invoice-body{padding:20px}
+    .invoice-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .invoice-party-title{font-size:10px;color:#888;letter-spacing:1px;margin-bottom:4px}
+    .invoice-party-name{font-size:14px;font-weight:700}
+    .invoice-party-detail{font-size:12px;color:#666;margin-top:2px}
+    table{width:100%;border-collapse:collapse;margin-bottom:16px}
+    th{padding:8px 10px;text-align:right;background:#0d2137;color:#c9a84c;font-size:11px}
+    td{padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:12px}
+    tr:nth-child(even) td{background:#fafafa}
+    .totals{border-top:2px solid #c9a84c;padding-top:12px}
+    .total-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+    .grand{font-size:17px;font-weight:900;border-top:1px solid #ddd;padding-top:8px;margin-top:4px}
+    .invoice-footer{background:#f8f8f8;padding:12px 20px;border-top:3px solid #c9a84c;display:flex;justify-content:space-between;align-items:center}
+    .stamp{width:65px;height:65px;border-radius:50%;border:3px solid #8a6e2e;display:flex;align-items:center;justify-content:center;transform:rotate(-15deg);color:#8a6e2e;font-size:10px;font-weight:700;text-align:center;line-height:1.3}
+    @media print{body{padding:0}}</style></head><body>${el.outerHTML}</body></html>`);
+  w.document.close(); w.focus();
+  setTimeout(()=>{ w.print(); w.close(); }, 500);
+}
+
+// ==============================
+// INVENTORY
+// ==============================
+function renderInventory() {
+  const parts=DB.get('parts'), movements=DB.get('movements');
+  const S=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  S('inv-total-types',parts.length.toLocaleString());
+  S('inv-total-qty',parts.reduce((s,p)=>s+p.qty,0).toLocaleString());
+  S('inv-zero',parts.filter(p=>p.qty===0).length);
+  S('inv-low',parts.filter(p=>p.qty>0&&p.qty<=(p.minQty||5)).length);
+  const lowEl=document.getElementById('lowStockTable');
+  const allLow=parts.filter(p=>p.qty<=(p.minQty||5));
+  if(lowEl) {
+    lowEl.innerHTML=allLow.length?`<table class="data-table"><thead><tr><th>القطعة</th><th>السيارة</th><th>الكمية</th><th>الحالة</th></tr></thead><tbody>
+      ${allLow.map(p=>`<tr><td>${p.icon||'🔩'} ${p.name}</td><td style="font-size:12px">${p.car||''}</td>
+      <td style="font-weight:700;color:${p.qty===0?'var(--red)':'var(--orange)'}">${p.qty}</td>
+      <td><span class="badge ${p.qty===0?'badge-red':'badge-orange'}">${p.qty===0?'نفد':'منخفض'}</span></td></tr>`).join('')}
+    </tbody></table>`
+    :'<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:40px">✅</div><div>لا توجد قطع منخفضة</div></div>';
+  }
+  const movEl=document.getElementById('stockMovementsTable');
+  if(movEl) {
+    const recent=[...movements].reverse().slice(0,30);
+    movEl.innerHTML=recent.length?`<table class="data-table"><thead><tr><th>القطعة</th><th>النوع</th><th>الكمية</th><th>الرصيد</th><th>التاريخ</th></tr></thead><tbody>
+      ${recent.map(m=>`<tr><td>${m.partName}</td>
+      <td><span class="badge ${m.type==='وارد'?'badge-green':'badge-red'}">${m.type==='وارد'?'📥':'📤'} ${m.type}</span></td>
+      <td>${m.qty}</td><td>${m.after}</td>
+      <td style="color:var(--text-dim);font-size:12px">${new Date(m.date).toLocaleDateString('ar')}</td></tr>`).join('')}
+    </tbody></table>`
+    :'<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:40px">📋</div><div>لا توجد حركات بعد</div></div>';
+  }
+  const sel=document.getElementById('stockin-part');
+  if(sel) sel.innerHTML='<option value="">-- اختر القطعة --</option>'+parts.map(p=>`<option value="${p.id}">${p.name} (${p.qty})</option>`).join('');
+  const distEl=document.getElementById('invDistribution');
+  if(distEl && parts.length) {
+    const cats={};
+    parts.forEach(p=>{ cats[p.category]=(cats[p.category]||0)+p.qty; });
+    const maxV=Math.max(...Object.values(cats),1);
+    distEl.innerHTML=Object.entries(cats).map(([cat,qty])=>`
+      <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>${cat}</span><span>${qty}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(qty/maxV*100)}%"></div></div></div>`).join('');
+  }
+}
+
+function logMove(partId,partName,type,qty,after,note) {
+  const m=DB.get('movements');
+  m.push({partId,partName,type,qty,after,note,date:new Date().toISOString()});
+  DB.set('movements',m);
+}
+
+function saveStockIn() {
+  const partId=document.getElementById('stockin-part').value;
+  const qty=parseInt(document.getElementById('stockin-qty').value)||0;
+  if (!partId||qty<=0) { showNotification('⚠️','اختر قطعة وأدخل كمية'); return; }
+  const parts=DB.get('parts'), p=parts.find(x=>x.id===partId); if(!p) return;
+  p.qty+=qty;
+  DB.set('parts',parts);
+  logMove(partId,p.name,'وارد',qty,p.qty,document.getElementById('stockin-note').value||'وارد يدوي');
+  closeModal('stockInModal'); renderInventory();
+  showNotification('✅ تم','تم إضافة '+qty+' قطعة لـ '+p.name);
+}
+
+// ==============================
+// CUSTOMERS
+// ==============================
+function saveCustomer() {
+  const name=(document.getElementById('cust-name').value||'').trim();
+  if (!name) { showNotification('⚠️','يرجى إدخال الاسم'); return; }
+  const custs=DB.get('customers');
+  custs.push({id:'C'+Date.now(),name,phone:document.getElementById('cust-phone').value||'',
+    car:document.getElementById('cust-car').value||'',address:document.getElementById('cust-address').value||'',
+    totalSpent:0,invoiceCount:0,debt:0,createdAt:new Date().toISOString()});
+  DB.set('customers',custs);
+  closeModal('addCustomerModal');
+  ['cust-name','cust-phone','cust-address'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  renderCustomers(); showNotification('✅ تم','تم إضافة: '+name);
+}
+
+function renderCustomers(search) {
+  const custs=DB.get('customers');
+  const q=(search||'').toLowerCase();
+  const list=q?custs.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||'').includes(q)):custs;
+  const el=document.getElementById('customersList');
+  if(el) {
+    el.innerHTML=list.length?list.map(c=>`<div class="customer-card">
+      <div class="customer-avatar">${c.name.charAt(0)}</div>
+      <div style="flex:1">
+        <div class="customer-name">${c.name}</div>
+        <div class="customer-phone">${c.phone||'لا يوجد هاتف'}</div>
+        <div class="customer-meta"><span>📦 ${c.invoiceCount||0}</span><span>💰 ${(c.totalSpent||0).toLocaleString()}</span></div>
+      </div>
+      <div style="text-align:left"><div style="font-size:11px;color:var(--text-dim)">الدين</div>
+        <div style="font-size:16px;font-weight:900;color:${(c.debt||0)>0?'var(--red)':'var(--green)'}">${(c.debt||0).toLocaleString()} د.ع</div>
+      </div>
+    </div>`).join('')
+    :`<div style="text-align:center;padding:60px;color:var(--text-dim)"><div style="font-size:56px">👥</div>
+      <div style="font-size:16px;font-weight:700;margin:8px 0">${custs.length?'لا نتائج':'لا يوجد زبائن بعد'}</div>
+      ${!custs.length?'<button class="btn btn-gold" onclick="openModal(\'addCustomerModal\')">➕ إضافة زبون</button>':''}
+    </div>`;
+  }
+  const td=custs.reduce((s,c)=>s+(c.debt||0),0);
+  const tde=document.getElementById('totalDebtsDisplay'); if(tde) tde.textContent=td.toLocaleString();
+  const debtors=custs.filter(c=>(c.debt||0)>0);
+  const debtEl=document.getElementById('debtsList');
+  if(debtEl) debtEl.innerHTML=debtors.length?`<table class="data-table"><thead><tr><th>الزبون</th><th>المبلغ</th></tr></thead><tbody>
+    ${debtors.map(c=>`<tr><td>${c.name}</td><td style="color:var(--red);font-weight:700">${(c.debt||0).toLocaleString()} د.ع</td></tr>`).join('')}
+  </tbody></table>`:'<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">لا توجد ديون</div>';
+}
+function searchCustomers(q) { renderCustomers(q); }
+
+// ==============================
+// SUPPLIERS
+// ==============================
+function saveSupplier() {
+  const name=(document.getElementById('sup-name').value||'').trim();
+  if (!name) { showNotification('⚠️','يرجى إدخال الاسم'); return; }
+  const sups=DB.get('suppliers');
+  sups.push({id:'S'+Date.now(),name,phone:document.getElementById('sup-phone').value||'',
+    type:document.getElementById('sup-type').value||'',location:document.getElementById('sup-location').value||'',
+    balance:0,totalPurchases:0,createdAt:new Date().toISOString()});
+  DB.set('suppliers',sups);
+  closeModal('addSupplierModal');
+  renderSuppliers(); showNotification('✅ تم','تم إضافة: '+name);
+}
+
+function renderSuppliers() {
+  const sups=DB.get('suppliers');
+  const el=document.getElementById('suppliersList'); if(!el) return;
+  el.innerHTML=sups.length?sups.map(s=>`<div class="supplier-card">
+    <div class="supplier-header">
+      <div class="supplier-icon">🏭</div>
+      <div style="flex:1"><div class="supplier-name">${s.name}</div><div style="font-size:12px;color:var(--text-dim)">${s.type||'مورد عام'}${s.location?' | '+s.location:''}</div></div>
+      <div class="supplier-balance"><div class="supplier-balance-label">الرصيد</div>
+        <div class="supplier-balance-val ${(s.balance||0)>0?'balance-owed':'balance-ok'}">${(s.balance||0).toLocaleString()} د.ع</div>
+      </div>
+    </div>
+    <div class="supplier-details">${s.phone?`<span>📞 ${s.phone}</span>`:''}<span>💰 ${(s.totalPurchases||0).toLocaleString()} د.ع</span></div>
+  </div>`).join('')
+  :`<div style="text-align:center;padding:60px;color:var(--text-dim)"><div style="font-size:56px">🏭</div>
+    <div style="font-size:16px;font-weight:700;margin:8px 0">لا يوجد موردون بعد</div>
+    <button class="btn btn-gold" onclick="openModal('addSupplierModal')">➕ إضافة مورد</button></div>`;
+}
+
+// ==============================
+// INVOICES PAGE
+// ==============================
+function renderInvoicesPage() {
+  const invs=DB.get('invoices');
+  const today=new Date().toDateString();
+  const tInv=invs.filter(i=>new Date(i.date).toDateString()===today);
+  const S=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  S('sales-today-total',tInv.reduce((s,i)=>s+(i.total||0),0).toLocaleString()+' د.ع');
+  S('sales-today-count',tInv.length);
+  S('sales-avg',tInv.length?Math.round(tInv.reduce((s,i)=>s+(i.total||0),0)/tInv.length).toLocaleString()+' د.ع':'0 د.ع');
+  S('sales-debts',invs.filter(i=>i.status==='دين').reduce((s,i)=>s+(i.total||0),0).toLocaleString()+' د.ع');
+  const c=document.getElementById('invoicesTableContainer'); if(!c) return;
+  c.innerHTML=invs.length?`<table class="data-table"><thead><tr>
+    <th>رقم الفاتورة</th><th>الزبون</th><th>الهاتف</th><th>القطع</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th>طباعة</th>
+  </tr></thead><tbody>${[...invs].reverse().map(inv=>`<tr>
+    <td style="color:var(--gold);font-weight:700">${inv.id}</td>
+    <td>${inv.customer||'نقدي'}</td>
+    <td style="direction:ltr;font-size:12px">${inv.phone||'-'}</td>
+    <td>${(inv.items||[]).length}</td>
+    <td style="font-weight:700">${(inv.total||0).toLocaleString()} د.ع</td>
+    <td style="color:var(--text-dim);font-size:12px">${new Date(inv.date).toLocaleDateString('ar')}</td>
+    <td><span class="badge ${inv.status==='مدفوعة'?'badge-green':'badge-orange'}">${inv.status}</span></td>
+    <td><button class="btn btn-gold" style="font-size:11px;padding:5px 10px" onclick="showInvoiceById('${inv.id}')">🖨️</button></td>
+  </tr>`).join('')}</tbody></table>`
+  :`<div style="text-align:center;padding:50px;color:var(--text-dim)"><div style="font-size:48px">🧾</div>
+    <div style="font-size:16px;font-weight:700;margin:8px 0">لا توجد فواتير بعد</div>
+    <button class="btn btn-gold" style="margin-top:14px" onclick="showPage('new-invoice')">➕ فاتورة جديدة</button></div>`;
+}
+function filterInvoices(){}
+function filterInvoiceStatus(){}
+
+// ==============================
+// REPORTS
+// ==============================
+function renderReports() {
+  const invs=DB.get('invoices'), parts=DB.get('parts');
+  const total=invs.reduce((s,i)=>s+(i.total||0),0);
+  const buy=invs.reduce((s,inv)=>s+(inv.items||[]).reduce((ss,item)=>{const p=parts.find(x=>x.id===item.id);return ss+(p?p.buyPrice*item.qty:0);},0),0);
+  const S=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  S('rpt-total-sales',total.toLocaleString()); S('rpt-profit',(total-buy).toLocaleString()); S('rpt-total-inv',invs.length);
+}
+function showReport(type) { showNotification('📊 تقرير','جاري التحضير...'); }
+
+// ==============================
+// USERS
+// ==============================
+function renderUsersPage() {
+  const users=DB.get('users');
+  const el=document.getElementById('usersList'); if(!el) return;
+  el.innerHTML=users.map(u=>`<div class="user-card">
+    <div class="user-card-avatar ${u.role==='admin'?'role-admin':'role-sales'}">${u.name.charAt(0)}</div>
+    <div class="user-card-name"><div class="user-card-username">${u.name}</div>
+      <div class="user-card-role">@${u.username} · ${u.role==='admin'?'مدير':u.role==='warehouse'?'مخزن':'مبيعات'}</div>
+    </div>
+    <span class="badge ${u.role==='admin'?'badge-gold':'badge-cyan'}">${u.role==='admin'?'⭐ مدير':u.role==='warehouse'?'📦 مخزن':'💼 مبيعات'}</span>
+    <div style="display:flex;gap:6px">
+      <button class="icon-btn" onclick="editUserModal('${u.id}')">✏️</button>
+      ${u.id!=='U1'?`<button class="icon-btn" style="color:var(--red)" onclick="deleteUser('${u.id}')">🗑️</button>`:''}
+    </div>
+  </div>`).join('');
+}
+
+function addUser() {
+  const username=(document.getElementById('new-username').value||'').trim().toLowerCase();
+  const password=document.getElementById('new-password').value||'';
+  const name=(document.getElementById('new-name').value||'').trim();
+  const role=document.getElementById('new-role').value||'sales';
+  if (!username||!password||!name) { showNotification('⚠️','يرجى ملء جميع الحقول'); return; }
+  const users=DB.get('users');
+  if (users.find(u=>u.username===username)) { showNotification('⚠️','اسم المستخدم موجود'); return; }
+  users.push({id:'U'+Date.now(),username,password:_enc(password),name,role,active:true,createdAt:new Date().toISOString()});
+  DB.set('users',users);
+  closeModal('addUserModal');
+  ['new-username','new-password','new-name'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  renderUsersPage(); showNotification('✅ تم','تم إضافة: '+name);
+}
+
+function editUserModal(id) {
+  const u=DB.get('users').find(x=>x.id===id); if(!u) return;
+  document.getElementById('new-name').value=u.name;
+  document.getElementById('new-username').value=u.username;
+  document.getElementById('new-password').value='';
+  document.getElementById('new-role').value=u.role;
+  document.getElementById('addUserModalTitle').textContent='✏️ تعديل المستخدم';
+  document.getElementById('addUserBtn').setAttribute('onclick',`updateUser('${id}')`);
+  openModal('addUserModal');
+}
+
+function updateUser(id) {
+  const users=DB.get('users'), idx=users.findIndex(x=>x.id===id); if(idx<0) return;
+  const newPass=document.getElementById('new-password').value;
+  users[idx]={...users[idx],
+    name:(document.getElementById('new-name').value||'').trim(),
+    username:(document.getElementById('new-username').value||'').trim().toLowerCase(),
+    role:document.getElementById('new-role').value
+  };
+  if(newPass) users[idx].password=_enc(newPass);
+  DB.set('users',users);
+  document.getElementById('addUserModalTitle').textContent='➕ إضافة مستخدم جديد';
+  document.getElementById('addUserBtn').setAttribute('onclick','addUser()');
+  closeModal('addUserModal'); renderUsersPage(); showNotification('✅ تم','تم تحديث المستخدم');
+}
+
+function deleteUser(id) {
+  if(!confirm('هل تريد حذف هذا المستخدم؟')) return;
+  DB.set('users',DB.get('users').filter(u=>u.id!==id));
+  renderUsersPage(); showNotification('🗑️ تم','تم الحذف');
+}
+
+function changeMyPassword() {
+  const cur=document.getElementById('cp-current').value||'';
+  const nw=document.getElementById('cp-new').value||'';
+  const cf=document.getElementById('cp-confirm').value||'';
+  if(!cur||!nw||!cf){showNotification('⚠️','أدخل كل الحقول');return;}
+  if(nw!==cf){showNotification('❌','كلمة المرور غير متطابقة');return;}
+  const sess=getSession(); if(!sess) return;
+  const users=DB.get('users'), u=users.find(x=>x.id===sess.id);
+  if(!u){showNotification('⚠️','المستخدم غير موجود');return;}
+  if(_dec(u.password)!==cur){showNotification('❌','كلمة المرور الحالية خاطئة');return;}
+  u.password=_enc(nw);
+  DB.set('users',users);
+  ['cp-current','cp-new','cp-confirm'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showNotification('✅ تم','تم تغيير كلمة المرور');
+}
+
+// ==============================
+// SETTINGS
+// ==============================
+function saveSettings() {
+  DB.setObj('settings',{
+    shopName:(document.getElementById('s-shop-name')||{}).value||'حجي حسن',
+    address:(document.getElementById('s-address')||{}).value||'',
+    phone:(document.getElementById('s-phone')||{}).value||'',
+    taxNumber:(document.getElementById('s-tax')||{}).value||''
+  });
+  showNotification('✅ تم الحفظ','تم حفظ الإعدادات');
+}
+
+function loadSettings() {
+  const s=DB.getObj('settings',{});
+  const V=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
+  V('s-shop-name',s.shopName||'حجي حسن - قطع غيار انفنتي');
+  V('s-address',s.address||'');
+  V('s-phone',s.phone||'');
+  V('s-tax',s.taxNumber||'');
+}
+
+// ==============================
+// BARCODE
+// ==============================
+function generateBarcode(text) {
+  const c=document.getElementById('invoiceBarcode'); if(!c) return;
+  c.innerHTML='';
+  const seed=(text||'').split('').reduce((s,ch)=>s+ch.charCodeAt(0),0);
+  for(let i=0;i<40;i++){
+    const b=document.createElement('div'); b.className='barcode-line'; b.style.width=(((seed*(i+1)*17)%3)+1)+'px';
+    c.appendChild(b);
+    if(i<39){const g=document.createElement('div');g.style.width='2px';c.appendChild(g);}
+  }
+}
+
+// ==============================
+// MODALS
+// ==============================
+function openModal(id) { const e=document.getElementById(id); if(e) e.classList.add('open'); }
+function closeModal(id) { const e=document.getElementById(id); if(e) e.classList.remove('open'); }
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+});
+
+// ==============================
+// NOTIFICATIONS
+// ==============================
+function showNotification(title, msg) {
+  const t=document.getElementById('notifTitle'), m=document.getElementById('notifMsg'), p=document.getElementById('notifPopup');
+  if(t)t.textContent=title; if(m)m.textContent=msg;
+  if(p){ p.classList.add('show'); setTimeout(()=>p.classList.remove('show'),3500); }
+}
+
+// ==============================
+// BACKUP / RESTORE
+// ==============================
+function backupData() {
+  const data={};
+  ['parts','invoices','customers','suppliers','movements','users'].forEach(k=>{ data[k]=DB.get(k); });
+  data._date=new Date().toISOString();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='haji-hassan-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); showNotification('✅ تم','تم تنزيل النسخة الاحتياطية');
+}
+function exportData() { backupData(); }
+function restoreData() {
+  const input=document.createElement('input'); input.type='file'; input.accept='.json';
+  input.onchange=(e)=>{
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      try {
+        const data=JSON.parse(ev.target.result);
+        ['parts','invoices','customers','suppliers','movements'].forEach(k=>{ if(data[k]) DB.set(k,data[k]); });
+        showNotification('✅ تمت الاستعادة','تم استعادة البيانات');
+        renderDashboard();
+      } catch(err){ showNotification('❌ خطأ','ملف غير صالح'); }
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+function resetData() {
+  if(!confirm('⚠️ هل تريد حذف كل البيانات؟')) return;
+  ['parts','invoices','customers','suppliers','movements'].forEach(k=>localStorage.removeItem('hh_'+k));
+  showNotification('🗑️ تم','تم حذف البيانات'); renderDashboard();
+}
+
+function uploadAppUpdate(input) {
+  const file=input.files[0]; if(!file) return;
+  showNotification('⏳ جاري...','يرجى الانتظار');
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    const newContent=e.target.result;
+    if(!newContent.includes('حجي حسن')){ showNotification('❌ خطأ','الملف غير صحيح'); return; }
+    const data={};
+    ['parts','invoices','customers','suppliers','movements','users'].forEach(k=>{ data[k]=DB.get(k); });
+    localStorage.setItem('hh_update_backup',JSON.stringify(data));
+    localStorage.setItem('hh_update_pending','1');
+    const blob=new Blob([newContent],{type:'text/html'});
+    if(confirm('✅ تم التحقق!\nسيتم فتح التطبيق الجديد. بياناتك محفوظة.\nاضغط موافق.')) window.location.href=URL.createObjectURL(blob);
+  };
+  reader.readAsText(file);
+}
+
+function checkPendingRestore() {
+  if(localStorage.getItem('hh_update_pending')==='1'){
+    try {
+      const data=JSON.parse(localStorage.getItem('hh_update_backup')||'{}');
+      ['parts','invoices','customers','suppliers','movements'].forEach(k=>{ if(data[k]&&data[k].length) DB.set(k,data[k]); });
+    } catch(e){}
+    localStorage.removeItem('hh_update_pending'); localStorage.removeItem('hh_update_backup');
+    showNotification('🎉 تم التحديث!','تم استعادة بياناتك');
+  }
+}
+
+// ==============================
+// PWA
+// ==============================
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault(); deferredPrompt=e;
+  setTimeout(()=>{ const b=document.getElementById('pwaBanner'); if(b) b.classList.add('show'); },2000);
+});
+const pwaBannerBtn=document.getElementById('pwaBannerBtn');
+if(pwaBannerBtn) pwaBannerBtn.addEventListener('click',async()=>{
+  if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; document.getElementById('pwaBanner').classList.remove('show'); }
+  else showNotification('📱','افتح قائمة المتصفح ← إضافة للشاشة الرئيسية');
+});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+// ==============================
+// INIT
+// ==============================
+window.onload = () => {
+  initUsers();
+  checkPendingRestore();
+  updateTime();
+  // Check existing session
+  if (getSession()) {
+    loadSettings();
+    document.getElementById('loginScreen').classList.add('hidden');
+    renderDashboard();
+  }
+};
+
+</script>
+</body>
+</html>
